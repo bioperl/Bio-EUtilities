@@ -1,7 +1,7 @@
 #
 # BioPerl module for Bio::Tools::EUtilities::Summary::Item
 #
-# Please direct questions and support issues to <bioperl-l@bioperl.org> 
+# Please direct questions and support issues to <bioperl-l@bioperl.org>
 #
 # Cared for by Chris Fields
 #
@@ -68,15 +68,15 @@ is much appreciated.
   bioperl-l@lists.open-bio.org               - General discussion
   http://www.bioperl.org/wiki/Mailing_lists  - About the mailing lists
 
-=head2 Support 
+=head2 Support
 
 Please direct usage questions or support issues to the mailing list:
 
 I<bioperl-l@bioperl.org>
 
-rather than to the module maintainer directly. Many experienced and 
-reponsive experts will be able look at the problem and quickly 
-address it. Please include a thorough description of the problem 
+rather than to the module maintainer directly. Many experienced and
+reponsive experts will be able look at the problem and quickly
+address it. Please include a thorough description of the problem
 with code and data examples if at all possible.
 
 =head2 Reporting Bugs
@@ -110,10 +110,10 @@ use base qw(Bio::Root::Root Bio::Tools::EUtilities::EUtilDataI);
 =head2 new
 
  Title    : new
- Usage    : 
- Function : 
- Returns  : 
- Args     : 
+ Usage    :
+ Function :
+ Returns  :
+ Args     :
 
 =cut
 
@@ -135,7 +135,7 @@ sub new {
  Function : returns array or array ref with id
  Returns  : array or array ref
  Args     : none
- Note     : the behavior of this method is to remain consistent with other 
+ Note     : the behavior of this method is to remain consistent with other
             implementations of get_ids(). To retrieve the single DocSum ID use
             get_id()
 
@@ -178,7 +178,7 @@ sub next_ListItem {
         # reset the structure iterator (required!)
         delete $self->{'_structures_it'} if $self->{'_structures_it'};
         $self->{'_lists_it'} = sub {return shift @lists}
-    }        
+    }
     return $self->{'_lists_it'}->();
 }
 
@@ -290,7 +290,7 @@ sub get_name {
 
  Title    : get_type
  Usage    : my $type = $ls->get_type
- Function : retrieves Item/ListItem/StructureItem type 
+ Function : retrieves Item/ListItem/StructureItem type
  Returns  : string
  Args     : none
  Note     : this is not the same as the datatype(), which describes the
@@ -315,7 +315,7 @@ sub get_type {
 
 sub get_content {
     my $self = shift;
-    return $self->{'_itemcontent'};    
+    return $self->{'_itemcontent'};
 }
 
 =head2 rewind
@@ -412,8 +412,8 @@ sub get_all_Items {
             for my $ls ($item->get_ListItems) {
                 push @{$self->{'_ordered_items'}}, $ls;
                 for my $st ($ls->get_StructureItems) {
-                    push @{$self->{'_ordered_items'}}, $st;                
-                } 
+                    push @{$self->{'_ordered_items'}}, $st;
+                }
             }
         }
     }
@@ -470,7 +470,7 @@ sub get_Items_by_name {
 sub get_contents_by_name {
     my ($self, $key) = @_;
     return unless $key;
-    my @data = map {$_->get_content} 
+    my @data = map {$_->get_content}
         grep {$_->get_name eq $key}
         $self->get_all_Items;
     return @data;
@@ -513,7 +513,7 @@ sub _add_data {
     for my $nm (qw(Type content Name)) {
         $self->{'_item'.lc $nm} = $data->{$nm} if defined $data->{$nm};
     }
-    $self->{'_id'} = $data->{Id} if exists $data->{Id};    
+    $self->{'_id'} = $data->{Id} if exists $data->{Id};
 }
 
 =head2 to_string
@@ -549,4 +549,3 @@ sub to_string {
 }
 
 1;
-

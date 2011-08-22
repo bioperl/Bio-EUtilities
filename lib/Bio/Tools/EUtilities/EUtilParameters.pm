@@ -1,7 +1,7 @@
 #
 # BioPerl module for Bio::Tools::EUtilities::EUtilParameters
 #
-# Please direct questions and support issues to <bioperl-l@bioperl.org> 
+# Please direct questions and support issues to <bioperl-l@bioperl.org>
 #
 # Cared for by Chris Fields <cjfields at bioperl dot org>
 #
@@ -62,7 +62,7 @@ passing, though these should be easily added in the future when necessary.
 
 =head2 Mailing Lists
 
-User feedback is an integral part of the 
+User feedback is an integral part of the
 evolution of this and other Bioperl modules. Send
 your comments and suggestions preferably to one
 of the Bioperl mailing lists. Your participation
@@ -71,15 +71,15 @@ is much appreciated.
   bioperl-l@lists.open-bio.org               - General discussion
   http://www.bioperl.org/wiki/Mailing_lists  - About the mailing lists
 
-=head2 Support 
+=head2 Support
 
 Please direct usage questions or support issues to the mailing list:
 
 I<bioperl-l@bioperl.org>
 
-rather than to the module maintainer directly. Many experienced and 
-reponsive experts will be able look at the problem and quickly 
-address it. Please include a thorough description of the problem 
+rather than to the module maintainer directly. Many experienced and
+reponsive experts will be able look at the problem and quickly
+address it. Please include a thorough description of the problem
 with code and data examples if at all possible.
 
 =head2 Reporting Bugs
@@ -90,7 +90,7 @@ Bug reports can be submitted via the web.
 
   https://redmine.open-bio.org/projects/bioperl/
 
-=head1 AUTHOR 
+=head1 AUTHOR
 
 Email cjfields at bioperl dot org
 
@@ -151,7 +151,7 @@ my %MODE = (
     'elink'     => {
         'mode'     => ['GET','POST'],
         'location' => 'elink.fcgi',
-        'params'   => [qw(db retmode id reldate mindate maxdate datetype term 
+        'params'   => [qw(db retmode id reldate mindate maxdate datetype term
                     dbfrom holding cmd version tool email linkname WebEnv
                     query_key)],
                    },
@@ -203,7 +203,7 @@ sub new {
         -methods => [@PARAMS, qw(eutil history correspondence id_file request_mode)]);
     $self->eutil() || $self->eutil('efetch');
     $self->tool() || $self->tool('BioPerl');
-    # set default retmode if not explicitly set    
+    # set default retmode if not explicitly set
     $self->set_default_retmode if (!$retmode);
     $self->{'_statechange'} = 1;
     return $self;
@@ -217,7 +217,7 @@ sub new {
  Usage   : $pobj->set_parameters(@params);
  Function: sets the NCBI parameters listed in the hash or array
  Returns : None
- Args    : [optional] hash or array of parameter/values.  
+ Args    : [optional] hash or array of parameter/values.
  Note    : This sets any parameter passed but leaves previously set data alone.
            In addition to regular eutil-specific parameters, you can set the
            following:
@@ -288,10 +288,10 @@ sub reset_parameters {
             by the mode ('add' or 'delete', indicating whether to append to or
             remove the specified values passed in). To clear all values, pass in
             an empty array reference (the mode in this case doesn't matter).
-            
+
             In addition to the normal eUtil-specific parameters, the following
             additional parameters are allowed:
-            
+
             -eutil    - the eUtil to be used (default 'efetch')
             -history  - pass a HistoryI-implementing object, which
                        sets the WebEnv, query_key, and possibly db and linkname
@@ -302,7 +302,7 @@ sub reset_parameters {
                        (default 0)
  Default  : None (no carried over parameters)
  Status   : NYI (dev in progress, carry on, nothing to see here)
- 
+
 =cut
 
 sub carryover {
@@ -347,9 +347,9 @@ sub _reset_except_carryover {
  Function : get/set the mode for the user agent to use for generating a request
  Returns  : either a preset mode (checked against the eutil) or a best-possible
             option based upon the currently-set parameters
- Args     : 
+ Args     :
  Status   :
- 
+
 =cut
 
 sub request_mode {
@@ -364,11 +364,11 @@ sub request_mode {
     }
     return $self->{_request_mode} if $self->{_request_mode};
     # let's try to make this a bit smarter...
-    
+
     # If not explicitly set, in cases where
     # the number of IDs is greater than 200, or the search term is longer than
     # 200, use POST when available
-    
+
     if (scalar(@{$MODE{$eutil}{mode}}) > 1) { # allows both GET and POST
         my ($id, $term) = ($self->id || [], $self->term || '');
         if (ref $id eq 'ARRAY' && scalar(@$id) > 200 || CORE::length($term) > 300) {
@@ -376,7 +376,7 @@ sub request_mode {
         }
     }
     # otherwise, fallback to default
-    $MODE{$eutil}{mode}[0]; # first is default    
+    $MODE{$eutil}{mode}[0]; # first is default
 }
 
 =head2 parameters_changed
@@ -464,7 +464,7 @@ sub get_parameters {
         }
         elsif ($param eq 'db' && $self->db && $join) {
             my $db = $self->db;
-            push @p, (ref $db eq 'ARRAY') ? 
+            push @p, (ref $db eq 'ARRAY') ?
                 ($param => join(',', @{ $db })) :
                 ($param => $db) ;
         }
@@ -579,8 +579,8 @@ sub eutil {
  Usage   : $p->history($history);
  Function: gets/sets the history object to be used for these parameters
  Returns : Bio::Tools::EUtilities::HistoryI (if set)
- Args    : [optional] Bio::Tools::EUtilities::HistoryI 
- Throws  : Passed something other than a Bio::Tools::EUtilities::HistoryI 
+ Args    : [optional] Bio::Tools::EUtilities::HistoryI
+ Throws  : Passed something other than a Bio::Tools::EUtilities::HistoryI
  Note    : This overrides WebEnv() and query_key() settings when set.  This
            caches the last history object passed and returns like a Get/Set
 
@@ -661,7 +661,7 @@ sub id_file {
 
 {
     my $HOSTBASE = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/';
-    
+
     sub url_base_address {
         my ($self, $address) = @_;
         return $HOSTBASE;

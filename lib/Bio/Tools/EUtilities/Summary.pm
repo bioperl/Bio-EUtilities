@@ -1,7 +1,7 @@
 #
 # BioPerl module for Bio::Tools::EUtilities::DocSum
 #
-# Please direct questions and support issues to <bioperl-l@bioperl.org> 
+# Please direct questions and support issues to <bioperl-l@bioperl.org>
 #
 # Cared for by Chris Fields
 #
@@ -10,7 +10,7 @@
 # You may distribute this module under the same terms as perl itself
 #
 # POD documentation - main docs before the code
-# 
+#
 # Part of the EUtilities BioPerl package
 
 =head1 NAME
@@ -33,14 +33,14 @@ esummary.
 
 =head1 DESCRIPTION
 
-This class handles data output (XML) from esummary.  
+This class handles data output (XML) from esummary.
 
 esummary retrieves information in the form of document summaries (docsums) when
 passed a list of primary IDs or if using a previous search history.
 
 This module breaks down the returned data from esummary into individual document
 summaries per ID (using a DocSum object). As the data in a docsum can be nested,
-subclasses of DocSums (Item, ListItem, Structure) are also present. 
+subclasses of DocSums (Item, ListItem, Structure) are also present.
 
 Further documentation for Link and Field subclass methods is included below.
 
@@ -57,15 +57,15 @@ is much appreciated.
   bioperl-l@lists.open-bio.org               - General discussion
   http://www.bioperl.org/wiki/Mailing_lists  - About the mailing lists
 
-=head2 Support 
+=head2 Support
 
 Please direct usage questions or support issues to the mailing list:
 
 I<bioperl-l@bioperl.org>
 
-rather than to the module maintainer directly. Many experienced and 
-reponsive experts will be able look at the problem and quickly 
-address it. Please include a thorough description of the problem 
+rather than to the module maintainer directly. Many experienced and
+reponsive experts will be able look at the problem and quickly
+address it. Please include a thorough description of the problem
 with code and data examples if at all possible.
 
 =head2 Reporting Bugs
@@ -76,7 +76,7 @@ Bug reports can be submitted via the web.
 
   https://redmine.open-bio.org/projects/bioperl/
 
-=head1 AUTHOR 
+=head1 AUTHOR
 
 Email cjfields at bioperl dot org
 
@@ -106,7 +106,7 @@ sub _add_data {
         $self->warn('No returned docsums.');
         return;
     }
-    
+
     my @docs;
     for my $docsum (@{ $data->{DocSum} }) {
         my $ds = Bio::Tools::EUtilities::Summary::DocSum->new(-datatype => 'docsum',

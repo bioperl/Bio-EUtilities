@@ -8,10 +8,10 @@ use warnings;
 BEGIN {
     use lib '.';
 	use Bio::Root::Test;
-	
+
 	test_begin(-tests => 22,
 			   -requires_module => 'XML::Simple');
-	
+
     use_ok('Bio::Tools::EUtilities');
     use_ok('Bio::Tools::EUtilities::EUtilParameters');
 }

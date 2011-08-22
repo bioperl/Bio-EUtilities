@@ -1,7 +1,7 @@
 #
 # BioPerl module for Bio::Tools::EUtilities::Info
 #
-# Please direct questions and support issues to <bioperl-l@bioperl.org> 
+# Please direct questions and support issues to <bioperl-l@bioperl.org>
 #
 # Cared for by Chris Fields
 #
@@ -10,7 +10,7 @@
 # You may distribute this module under the same terms as perl itself
 #
 # POD documentation - main docs before the code
-# 
+#
 # Part of the EUtilities BioPerl package
 
 =head1 NAME
@@ -110,15 +110,15 @@ mailing lists. Your participation is much appreciated.
   bioperl-l@lists.open-bio.org               - General discussion
   http://www.bioperl.org/wiki/Mailing_lists  - About the mailing lists
 
-=head2 Support 
+=head2 Support
 
 Please direct usage questions or support issues to the mailing list:
 
 I<bioperl-l@bioperl.org>
 
-rather than to the module maintainer directly. Many experienced and 
-reponsive experts will be able look at the problem and quickly 
-address it. Please include a thorough description of the problem 
+rather than to the module maintainer directly. Many experienced and
+reponsive experts will be able look at the problem and quickly
+address it. Please include a thorough description of the problem
 with code and data examples if at all possible.
 
 =head2 Reporting Bugs
@@ -128,7 +128,7 @@ and their resolution. Bug reports can be submitted via the web.
 
   https://redmine.open-bio.org/projects/bioperl/
 
-=head1 AUTHOR 
+=head1 AUTHOR
 
 Email cjfields at bioperl dot org
 
@@ -157,7 +157,7 @@ use Bio::Tools::EUtilities::Info::FieldInfo;
             $info->rewind('links') # rewinds only links
  Function : 'rewinds' (resets) specified interators (all if no arg)
  Returns  : none
- Args     : [OPTIONAL] String: 
+ Args     : [OPTIONAL] String:
             'all'    - all iterators (default)
             'linkinfo'  - LinkInfo objects only
             'fieldinfo' - FieldInfo objects only
@@ -176,7 +176,7 @@ sub _add_data {
     # start setting internal variables
     if (exists $simple->{DbInfo}) {
         for my $key (sort keys %{ $simple->{DbInfo} }) {
-            my $data = 
+            my $data =
             ($key eq 'FieldList') ? $simple->{DbInfo}->{$key}->{Field} :
             ($key eq 'LinkList' ) ? $simple->{DbInfo}->{$key}->{Link}  :
             $simple->{DbInfo}->{$key};

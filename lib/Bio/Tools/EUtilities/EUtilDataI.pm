@@ -1,7 +1,7 @@
 #
 # BioPerl module for Bio::Tools::EUtilities::EUtilDataI
 #
-# Please direct questions and support issues to <bioperl-l@bioperl.org> 
+# Please direct questions and support issues to <bioperl-l@bioperl.org>
 #
 # Cared for by Chris Fields <cjfields at bioperl dot org>
 #
@@ -65,15 +65,15 @@ corresponding to the data type simply return the set data or iterate through the
 data sets if the values are more complex. Data can alternatively be passed
 through the object constructor.
 
-=head2 Support 
+=head2 Support
 
 Please direct usage questions or support issues to the mailing list:
 
 I<bioperl-l@bioperl.org>
 
-rather than to the module maintainer directly. Many experienced and 
-reponsive experts will be able look at the problem and quickly 
-address it. Please include a thorough description of the problem 
+rather than to the module maintainer directly. Many experienced and
+reponsive experts will be able look at the problem and quickly
+address it. Please include a thorough description of the problem
 with code and data examples if at all possible.
 
 =head2 Reporting Bugs
@@ -84,7 +84,7 @@ Bug reports can be submitted via the web.
 
   https://redmine.open-bio.org/projects/bioperl/
 
-=head1 AUTHOR 
+=head1 AUTHOR
 
 Email cjfields at bioperl dot org
 
@@ -121,9 +121,9 @@ sub eutil {
     my ($self, $eutil) = @_;
     if ($eutil) {
         $self->throw("$eutil not supported") if !exists $VALID_EUTILS{$eutil};
-        return $self->{'_eutil'} = $eutil; 
+        return $self->{'_eutil'} = $eutil;
     }
-    return $self->{'_eutil'}; 
+    return $self->{'_eutil'};
 }
 
 }

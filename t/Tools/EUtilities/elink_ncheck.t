@@ -8,10 +8,10 @@ use Data::Dumper;
 BEGIN {
     use lib '.';
 	use Bio::Root::Test;
-	
+
 	test_begin(-tests => 60,
 			   -requires_module => 'XML::Simple');
-	
+
     use_ok('Bio::Tools::EUtilities');
     use_ok('Bio::Tools::EUtilities::EUtilParameters');
 }
@@ -129,4 +129,3 @@ is(scalar(@urls), 0);
 # HistoryI
 is($ls[1]->get_webenv, undef);
 is($ls[1]->get_query_key, undef);
-

@@ -7,10 +7,10 @@ use Data::Dumper;
 BEGIN {
     use lib '.';
 	use Bio::Root::Test;
-	
+
 	test_begin(-tests => 83,
 			   -requires_module => 'XML::Simple');
-	
+
     use_ok('Bio::Tools::EUtilities');
     use_ok('Bio::Tools::EUtilities::EUtilParameters');
 }
@@ -191,4 +191,3 @@ is(join(',',$ds[0]->get_contents_by_name('Symbol')), 'NOTCH1,NOTCH1,NOTCH1,NOTCH
 
 is($ds[1]->get_type_by_name('HomoloGeneDataList'), 'List');
 is(join(',',$ds[1]->get_contents_by_name('TaxId')), '9606,9913,10090,10116,9031,7955');
-

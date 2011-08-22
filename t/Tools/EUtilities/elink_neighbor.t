@@ -7,15 +7,15 @@ use warnings;
 BEGIN {
     use lib '.';
 	use Bio::Root::Test;
-	
+
 	test_begin(-tests => 63,
 			   -requires_module => 'XML::Simple');
-	
+
     use_ok('Bio::Tools::EUtilities');
     use_ok('Bio::Tools::EUtilities::EUtilParameters');
 }
 
-# check -correspondence => 0 (default) 
+# check -correspondence => 0 (default)
 my $eutil = Bio::Tools::EUtilities->new(
     -eutil      => 'elink',
     -file       => test_input_file('eutils','elink_neighbor.xml'));
@@ -54,7 +54,7 @@ is(scalar(@urls), 0);
 is($ls[0]->get_webenv, undef);
 is($ls[0]->get_query_key, undef);
 
-# next 
+# next
 is(join(',',$ls[1]->get_ids), '15968079,11997336');
 is(join(',',$ls[1]->get_databases), 'pubmed');
 is(join(',',$ls[1]->get_submitted_ids), '730439,68536103,1621261,20807972');
@@ -94,7 +94,7 @@ isa_ok($ls[0], 'Bio::Tools::EUtilities::Link::LinkSet');
 
 # check data in LinkSets
 # Note that you can get more that one returned ID, but only one submitted ID
-is(join(',',$ls[0]->get_ids), '12368430,9634230'); 
+is(join(',',$ls[0]->get_ids), '12368430,9634230');
 is(join(',',$ls[0]->get_submitted_ids), '1621261');
 is(join(',',$ls[0]->get_link_names), 'protein_pubmed');
 is($ls[0]->get_dbfrom, 'protein');

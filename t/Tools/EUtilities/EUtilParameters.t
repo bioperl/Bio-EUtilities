@@ -8,11 +8,11 @@ use warnings;
 BEGIN {
     use lib '.';
 	use Bio::Root::Test;
-	
+
 	test_begin(-tests => 13,
 			   -requires_modules =>
                [qw(URI HTTP::Request)]);
-	
+
     use_ok('Bio::Tools::EUtilities::EUtilParameters');
 }
 
@@ -31,7 +31,7 @@ my $pobj = Bio::Tools::EUtilities::EUtilParameters->new(%params);
 # initial 'primed' state
 is($pobj->parameters_changed, 1);
 
-my $request = $pobj->to_request; # 'exhaust' state 
+my $request = $pobj->to_request; # 'exhaust' state
 isa_ok($request, 'HTTP::Request');
 is($request->url, 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?'.
    'db=nucleotide&retmode=xml&id=6679096%2C31543332%2C134288853%2C483581%2C'.

@@ -1,7 +1,7 @@
 #
 # BioPerl module for Bio::Tools::EUtilities::Summary::ItemContainerI
 #
-# Please direct questions and support issues to <bioperl-l@bioperl.org> 
+# Please direct questions and support issues to <bioperl-l@bioperl.org>
 #
 # Cared for by Chris Fields
 #
@@ -24,11 +24,11 @@ to either DocSums or to Items themselves (which can be layered)
   # Implement ItemContainerI
 
   # $foo is any ItemContainerI (current implementations are DocSum and Item itself)
-  
+
   while (my $item = $foo->next_Item) { # iterate through contained Items
      # do stuff here
   }
-  
+
   @items = $foo->get_Items;  # all Items in the container (hierarchy intact)
   @items = $foo->get_all_Items;  # all Items in the container (flattened)
   @items = $foo->get_Items_by_name('bar'); # Specifically named Items
@@ -57,15 +57,15 @@ is much appreciated.
   bioperl-l@lists.open-bio.org               - General discussion
   http://www.bioperl.org/wiki/Mailing_lists  - About the mailing lists
 
-=head2 Support 
+=head2 Support
 
 Please direct usage questions or support issues to the mailing list:
 
 I<bioperl-l@bioperl.org>
 
-rather than to the module maintainer directly. Many experienced and 
-reponsive experts will be able look at the problem and quickly 
-address it. Please include a thorough description of the problem 
+rather than to the module maintainer directly. Many experienced and
+reponsive experts will be able look at the problem and quickly
+address it. Please include a thorough description of the problem
 with code and data examples if at all possible.
 
 =head2 Reporting Bugs
@@ -162,8 +162,8 @@ sub get_all_Items {
             for my $ls ($item->get_ListItems) {
                 push @{$self->{'_ordered_items'}}, $ls;
                 for my $st ($ls->get_StructureItems) {
-                    push @{$self->{'_ordered_items'}}, $st;                
-                } 
+                    push @{$self->{'_ordered_items'}}, $st;
+                }
             }
         }
     }
@@ -220,7 +220,7 @@ sub get_Items_by_name {
 sub get_contents_by_name {
     my ($self, $key) = @_;
     return unless $key;
-    my @data = map {$_->get_content} 
+    my @data = map {$_->get_content}
         grep {$_->get_name eq $key}
         $self->get_all_Items;
     return @data;

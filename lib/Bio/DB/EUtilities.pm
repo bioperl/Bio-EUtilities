@@ -1,7 +1,7 @@
 #
 # BioPerl module for Bio::DB::EUtilities
 #
-# Please direct questions and support issues to <bioperl-l@bioperl.org> 
+# Please direct questions and support issues to <bioperl-l@bioperl.org>
 #
 # Cared for by Chris Fields <cjfields at bioperl dot org>
 #
@@ -10,8 +10,8 @@
 # You may distribute this module under the same terms as perl itself
 #
 # POD documentation - main docs before the code
-# 
-# EUtil-based extension of GenericWebDBI interface 
+#
+# EUtil-based extension of GenericWebDBI interface
 
 =head1 NAME
 
@@ -31,53 +31,53 @@ NCBI's eUtils
   @ids = $eutil->get_ids(); # returns array or array ref of IDs
 
   # eutil => any of egquery, espell
-  
+
   $term = $eutil->get_term(); # returns array or array ref of IDs
-  
+
   # eutil => any of elink, einfo
-  
+
   $db = $eutil->get_database(); # returns database
-  
+
   # Query-related methods (esearch, egquery, espell data)
   # eutil data centered on use of search terms
-  
+
   my $ct = $eutil->get_count; # uses optional database for egquery count
   my $translation = $eutil->get_count;
-  
+
   my $corrected = $eutil->get_corrected_query; # espell
 
   while (my $gquery = $eutil->next_GlobalQuery) {
      # iterates through egquery data
   }
-  
+
   # Info-related methods (einfo data)
   # database-related information
-  
+
   my $desc = $eutil->get_description;
   my $update = $eutil->get_last_update;
   my $nm = $eutil->get_menu_name;
   my $ct = $eutil->get_record_count;
-  
+
   while (my $field = $eutil->next_FieldInfo) {
       # ...
   }
   while (my $field = $eutil->next_LinkInfo) {
       # ...
   }
-  
+
   # History methods (epost data, some data returned from elink)
   # data which enables one to retrieve and query against user-stored
   # information on the NCBI server
-  
+
   while (my $cookie = $eutil->next_History) {
       # ...
   }
-  
+
   my @hists = $eutil->get_Histories;
-  
+
   # Bio::Tools::EUtilities::Summary (esummary data)
   # information on a specific database record
-  
+
   # retrieve nested docsum data
   while (my $docsum = $eutil->next_DocSum) {
       print "ID:",$docsum->get_ids,"\n";
@@ -91,7 +91,7 @@ NCBI's eUtils
           }
       }
   }
-  
+
   # retrieve flattened item list per DocSum
   while (my $docsum = $eutil->next_DocSum) {
      my @items = $docsum->get_all_DocSum_Items;
@@ -127,7 +127,7 @@ coalesce around a consistent API between the two (they are close).
 =item * Carryover of parameters
 
 Maybe add a default but configurable list of parameters that can be carried over
-between calls.  
+between calls.
 
 =item * Make setting certain parameters consistent
 
@@ -149,7 +149,7 @@ run.
 
 =head2 Mailing Lists
 
-User feedback is an integral part of the 
+User feedback is an integral part of the
 evolution of this and other Bioperl modules. Send
 your comments and suggestions preferably to one
 of the Bioperl mailing lists. Your participation
@@ -158,15 +158,15 @@ is much appreciated.
   bioperl-l@lists.open-bio.org               - General discussion
   http://www.bioperl.org/wiki/Mailing_lists  - About the mailing lists
 
-=head2 Support 
+=head2 Support
 
 Please direct usage questions or support issues to the mailing list:
 
 I<bioperl-l@bioperl.org>
 
-rather than to the module maintainer directly. Many experienced and 
-reponsive experts will be able look at the problem and quickly 
-address it. Please include a thorough description of the problem 
+rather than to the module maintainer directly. Many experienced and
+reponsive experts will be able look at the problem and quickly
+address it. Please include a thorough description of the problem
 with code and data examples if at all possible.
 
 =head2 Reporting Bugs
@@ -177,7 +177,7 @@ Bug reports can be submitted via the web.
 
   https://redmine.open-bio.org/projects/bioperl/
 
-=head1 AUTHOR 
+=head1 AUTHOR
 
 Email cjfields at bioperl dot org
 
@@ -606,12 +606,12 @@ sub get_db {
 
  Title    : get_databases
  Usage    : my @dbs = $parser->get_databases
- Function : returns list of databases 
+ Function : returns list of databases
  Returns  : array of strings
  Args     : none
  Notes    : This is guaranteed to return a list of databases. For a single
             database use the convenience method get_db/get_database
-            
+
             egquery    : list of all databases in the query
             einfo      : the queried database
             espell     : the queried database
@@ -660,7 +660,7 @@ sub next_History {
 
 =head2 next_cookie (alias for next_History)
 
-=cut 
+=cut
 
 sub next_cookie {
     my ($self, @args) = @_;
@@ -745,7 +745,7 @@ sub get_translation_from {
  Function: replaced string used in place of the original query term in translation_from()
  Returns : string
  Args    : none
- Note    : only applicable for esearch 
+ Note    : only applicable for esearch
 
 =cut
 
@@ -828,7 +828,7 @@ sub get_corrected_query {
  Title    : get_replaced_terms
  Usage    : my $term = $eutil->get_replaced_terms
  Function : returns array of strings replaced in the query
- Returns  : string 
+ Returns  : string
  Args     : none
  Notes    : only applicable for espell
 
@@ -878,7 +878,7 @@ sub get_GlobalQueries {
             $docsum->print_GlobalQueries(-fh => $fh, -cb => $coderef);
  Function : prints item data for all global queries.  The default printing
             method is each item per DocSum is printed with relevant values if
-            present in a simple table using Text::Wrap. 
+            present in a simple table using Text::Wrap.
  Returns  : none
  Args     : [optional]
            -file : file to print to
@@ -937,7 +937,7 @@ sub get_DocSums {
             $docsum->print_DocSums(-fh => $fh, -cb => $coderef);
  Function : prints item data for all docsums.  The default printing method is
             each item per DocSum is printed with relevant values if present
-            in a simple table using Text::Wrap.  
+            in a simple table using Text::Wrap.
  Returns  : none
  Args     : [optional]
            -file : file to print to
@@ -962,9 +962,9 @@ sub print_DocSums {
  Title    : get_available_databases
  Usage    : my @dbs = $info->get_available_databases
  Function : returns list of available eutil-compatible database names
- Returns  : Array of strings 
+ Returns  : Array of strings
  Args     : none
- Notes    : only applicable for einfo. 
+ Notes    : only applicable for einfo.
 
 =cut
 
@@ -980,7 +980,7 @@ sub get_available_databases {
  Function : returns database record count
  Returns  : integer
  Args     : none
- Notes    : only applicable for einfo.  
+ Notes    : only applicable for einfo.
 
 =cut
 
@@ -996,7 +996,7 @@ sub get_record_count {
  Function : returns string containing time/date stamp for last database update
  Returns  : integer
  Args     : none
- Notes    : only applicable for einfo. 
+ Notes    : only applicable for einfo.
 
 =cut
 
@@ -1012,7 +1012,7 @@ sub get_last_update {
  Function : returns string of database menu name
  Returns  : string
  Args     : none
- Notes    : only applicable for einfo. 
+ Notes    : only applicable for einfo.
 
 =cut
 
@@ -1028,7 +1028,7 @@ sub get_menu_name {
  Function : returns database description
  Returns  : string
  Args     : none
- Notes    : only applicable for einfo. 
+ Notes    : only applicable for einfo.
 
 =cut
 
@@ -1061,7 +1061,7 @@ sub next_FieldInfo {
  Function : returns list of FieldInfo objects
  Returns  : array (FieldInfo objects)
  Args     : none
- Notes    : only applicable for einfo. 
+ Notes    : only applicable for einfo.
 
 =cut
 
@@ -1096,7 +1096,7 @@ sub next_LinkInfo {
  Function : returns list of LinkInfo objects
  Returns  : array (LinkInfo objects)
  Args     : none
- Notes    : only applicable for einfo.  
+ Notes    : only applicable for einfo.
 
 =cut
 
@@ -1113,12 +1113,12 @@ sub get_LinkInfo {
  Usage    : $info->print_FieldInfo();
             $info->print_FieldInfo(-fh => $fh, -cb => $coderef);
  Function : prints field data for each FieldInfo object. The default method
-            prints data from each FieldInfo in a simple table using Text::Wrap.  
+            prints data from each FieldInfo in a simple table using Text::Wrap.
  Returns  : none
  Args     : [optional]
            -file : file to print to
            -fh   : filehandle to print to (cannot be used concurrently with file)
-           -cb   : coderef to use in place of default print method.  
+           -cb   : coderef to use in place of default print method.
            -wrap : number of columns to wrap default text output to (def = 80)
  Note     : if -file or -fh are not defined, prints to STDOUT
 
@@ -1179,7 +1179,7 @@ sub next_LinkSet {
  Function : returns list of LinkSets objects
  Returns  : array (LinkSet objects)
  Args     : none
- Notes    : only applicable for elink.  
+ Notes    : only applicable for elink.
 
 =cut
 
@@ -1241,7 +1241,7 @@ sub get_linked_databases {
             $esum->rewind('recursive')
  Function : retrieve a list of DocSum instances
  Returns  : array of Bio::Tools::EUtilities::Summary::DocSum
- Args     : [optional] Scalar; string ('all') to reset all iterators, or string 
+ Args     : [optional] Scalar; string ('all') to reset all iterators, or string
             describing the specific main object iterator to reset. The following
             are recognized (case-insensitive):
 

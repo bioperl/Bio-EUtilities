@@ -1,7 +1,7 @@
 #
 # BioPerl module for Bio::Tools::EUtilities::Info::LinkInfo
 #
-# Please direct questions and support issues to <bioperl-l@bioperl.org> 
+# Please direct questions and support issues to <bioperl-l@bioperl.org>
 #
 # Cared for by Chris Fields
 #
@@ -10,18 +10,18 @@
 # You may distribute this module under the same terms as perl itself
 #
 # POD documentation - main docs before the code
-# 
+#
 # Part of the EUtilities BioPerl package
 
 =head1 NAME
 
-Bio::Tools::EUtilities::Info::LinkInfo - class for storing einfo link data 
+Bio::Tools::EUtilities::Info::LinkInfo - class for storing einfo link data
 
 =head1 SYNOPSIS
 
     ## should not create instance directly; Bio::Tools::EUtilities does this ##
 
-    # get a LinkInfo object using Bio:Tools::EUtilities    
+    # get a LinkInfo object using Bio:Tools::EUtilities
     print "Link name: ",$link->get_link_name,"\n";
     print "Link name: ",$link->get_link_menu_name,"\n";
     print "Link desc: ",$link->get_link_description,"\n";
@@ -51,15 +51,15 @@ mailing lists. Your participation is much appreciated.
   bioperl-l@lists.open-bio.org               - General discussion
   http://www.bioperl.org/wiki/Mailing_lists  - About the mailing lists
 
-=head2 Support 
+=head2 Support
 
 Please direct usage questions or support issues to the mailing list:
 
 I<bioperl-l@bioperl.org>
 
-rather than to the module maintainer directly. Many experienced and 
-reponsive experts will be able look at the problem and quickly 
-address it. Please include a thorough description of the problem 
+rather than to the module maintainer directly. Many experienced and
+reponsive experts will be able look at the problem and quickly
+address it. Please include a thorough description of the problem
 with code and data examples if at all possible.
 
 =head2 Reporting Bugs
@@ -69,7 +69,7 @@ and their resolution. Bug reports can be submitted via the web.
 
   https://redmine.open-bio.org/projects/bioperl/
 
-=head1 AUTHOR 
+=head1 AUTHOR
 
 Email cjfields at bioperl dot org
 
@@ -91,7 +91,7 @@ use warnings;
 =head2 new
 
  Title    : new
- Note     : *** should not be called by end-users ***  
+ Note     : *** should not be called by end-users ***
  Usage    : my $ct = Bio::Tools::EUtilities::Info::LinkInfo;
  Function : returns new LinkInfo instance
  Returns  : Bio::Tools::EUtilities::Info::LinkInfo instance
@@ -288,4 +288,3 @@ sub to_string {
 }
 
 1;
-

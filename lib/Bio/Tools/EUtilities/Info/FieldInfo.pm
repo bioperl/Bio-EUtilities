@@ -1,7 +1,7 @@
 #
 # BioPerl module for Bio::Tools::EUtilities::Info
 #
-# Please direct questions and support issues to <bioperl-l@bioperl.org> 
+# Please direct questions and support issues to <bioperl-l@bioperl.org>
 #
 # Cared for by Chris Fields
 #
@@ -10,7 +10,7 @@
 # You may distribute this module under the same terms as perl itself
 #
 # POD documentation - main docs before the code
-# 
+#
 # Part of the EUtilities BioPerl package
 
 =head1 NAME
@@ -56,7 +56,7 @@ Bio::Tools::EUtilities::Info::FieldInfo - class for storing einfo field data
 
 =head1 DESCRIPTION
 
-This class handles simple field data output (XML) from einfo.  
+This class handles simple field data output (XML) from einfo.
 
 For more information on einfo see:
 
@@ -73,15 +73,15 @@ mailing lists. Your participation is much appreciated.
   bioperl-l@lists.open-bio.org               - General discussion
   http://www.bioperl.org/wiki/Mailing_lists  - About the mailing lists
 
-=head2 Support 
+=head2 Support
 
 Please direct usage questions or support issues to the mailing list:
 
 I<bioperl-l@bioperl.org>
 
-rather than to the module maintainer directly. Many experienced and 
-reponsive experts will be able look at the problem and quickly 
-address it. Please include a thorough description of the problem 
+rather than to the module maintainer directly. Many experienced and
+reponsive experts will be able look at the problem and quickly
+address it. Please include a thorough description of the problem
 with code and data examples if at all possible.
 
 =head2 Reporting Bugs
@@ -91,7 +91,7 @@ and their resolution. Bug reports can be submitted via the web.
 
   https://redmine.open-bio.org/projects/bioperl/
 
-=head1 AUTHOR 
+=head1 AUTHOR
 
 Email cjfields at bioperl dot org
 
@@ -112,7 +112,7 @@ use warnings;
 =head2 new
 
  Title    : new
- Note     : *** should not be called by end-users ***  
+ Note     : *** should not be called by end-users ***
  Usage    : my $ct = Bio::Tools::EUtilities::Info::FieldInfo;
  Function : returns new FieldInfo instance
  Returns  : Bio::Tools::EUtilities::Info::FieldInfo instance
@@ -132,7 +132,7 @@ sub new {
 
  Title    : get_term_count
  Usage    : my $ct = $field->get_term_count;
- Function : returns number of terms for field 
+ Function : returns number of terms for field
  Returns  : integer
  Args     : none
 
@@ -184,7 +184,7 @@ sub get_field_code { return shift->{'_name'} }
 
 =cut
 
-sub get_field_description { return shift->{'_description'} } 
+sub get_field_description { return shift->{'_description'} }
 
 =head2 is_date
 
@@ -213,7 +213,7 @@ sub is_date {
 
 sub is_singletoken {
     my $self = shift;
-    ($self->{'_singletoken'} && $self->{'_singletoken'} eq 'Y') ? return 1 : return 0;    
+    ($self->{'_singletoken'} && $self->{'_singletoken'} eq 'Y') ? return 1 : return 0;
 }
 
 =head2 is_hierarchy
@@ -281,7 +281,7 @@ sub _add_data {
 
 sub to_string {
     my $self = shift;
-    #        order     method                     name        
+    #        order     method                     name
     my %tags = (1 => ['get_field_code'        => 'Field Code'],
                 2 => ['get_field_name'        => 'Field Name'],
                 3 => ['get_field_description' => 'Description'],
@@ -299,4 +299,3 @@ sub to_string {
 }
 
 1;
-

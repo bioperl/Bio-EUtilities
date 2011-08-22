@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-=head1 NAME 
+=head1 NAME
 
 bp_einfo.pl - query einfo to find all available databases or information about a
             specific database (field information or links to other NCBI
@@ -23,19 +23,19 @@ Command line options:
   -d/--db/--database
         NCBI database to query
         (default = none, which shows available databases)
-        
+
   -f/--field
         print out information about a specific field code
         (default = none)
-        
+
   -l/--link
         print out information about a specific link name
         (default = none)
-        
+
   -o/--out
         outfile
         (default = STDOUT)
-        
+
   -h/--help
         show this documentation
 
@@ -71,10 +71,10 @@ GetOptions(
        );
 
 my $outfh;
-if( $outfile ) { 
+if( $outfile ) {
     open($outfh, ">$outfile") || die("$outfile: $!");
-} else { 
-    $outfh = \*STDOUT; 
+} else {
+    $outfh = \*STDOUT;
 }
 
 if (!defined $db) {

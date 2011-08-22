@@ -8,10 +8,10 @@ use warnings;
 BEGIN {
     use lib '.';
 	use Bio::Root::Test;
-	
+
 	test_begin(-tests => 51,
 			   -requires_module => 'XML::Simple');
-	
+
     use_ok('Bio::Tools::EUtilities');
     use_ok('Bio::Tools::EUtilities::EUtilParameters');
 }
@@ -89,4 +89,3 @@ is($linkinfo[12]->get_link_description, 'GEO records associated with pubmed reco
 is($linkinfo[12]->get_priority, undef, 'get_priority');
 is($linkinfo[12]->get_html_tag, undef, 'get_html_tag');
 is($linkinfo[12]->get_url, undef, 'get_url');
-

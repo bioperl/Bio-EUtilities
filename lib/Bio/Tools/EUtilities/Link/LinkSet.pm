@@ -1,7 +1,7 @@
 #
 # BioPerl module for Bio::Tools::EUtilities::Link::LinkSet
 #
-# Please direct questions and support issues to <bioperl-l@bioperl.org> 
+# Please direct questions and support issues to <bioperl-l@bioperl.org>
 #
 # Cared for by Chris Fields
 #
@@ -10,7 +10,7 @@
 # You may distribute this module under the same terms as perl itself
 #
 # POD documentation - main docs before the code
-# 
+#
 # Part of the EUtilities BioPerl package
 
 =head1 NAME
@@ -38,15 +38,15 @@ is much appreciated.
   bioperl-l@lists.open-bio.org               - General discussion
   http://www.bioperl.org/wiki/Mailing_lists  - About the mailing lists
 
-=head2 Support 
+=head2 Support
 
 Please direct usage questions or support issues to the mailing list:
 
 I<bioperl-l@bioperl.org>
 
-rather than to the module maintainer directly. Many experienced and 
-reponsive experts will be able look at the problem and quickly 
-address it. Please include a thorough description of the problem 
+rather than to the module maintainer directly. Many experienced and
+reponsive experts will be able look at the problem and quickly
+address it. Please include a thorough description of the problem
 with code and data examples if at all possible.
 
 =head2 Reporting Bugs
@@ -57,7 +57,7 @@ Bug reports can be submitted via the web.
 
   https://redmine.open-bio.org/projects/bioperl/
 
-=head1 AUTHOR 
+=head1 AUTHOR
 
 Email cjfields at bioperl dot org
 
@@ -160,7 +160,7 @@ sub get_dbto {
  Title    : get_databases
  Usage    : my $string = $linkset->get_databases;
  Function : retrieve databases referred to for this linkset
-            these may be present as a single database or embedded in 
+            these may be present as a single database or embedded in
  Returns  : array of strings
  Args     : none
 
@@ -169,7 +169,7 @@ sub get_dbto {
 sub get_databases {
     my $self = shift;
     my %tmp;
-    my @dbs = sort map {$_->get_database} 
+    my @dbs = sort map {$_->get_database}
         grep {!$tmp{$_->get_database}++} ($self->get_LinkInfo);
     unshift @dbs, $self->{'_dbto'} if $self->{'_dbto'} && !$tmp{$self->{'_dbto'}}++;
     return @dbs;
@@ -261,8 +261,8 @@ sub get_submitted_ids {
 
  Title    : has_scores
  Usage    : if (my $linkset->has_scores) {...}
- Function : returns TRUE if score data is present 
- Returns  : Boolean 
+ Function : returns TRUE if score data is present
+ Returns  : Boolean
  Args     : none
 
 =cut
@@ -288,7 +288,7 @@ sub get_scores {
     # called more than once...
     return unless $self->has_scores;
     my %scores = map {$_ => $self->{'_id'}->{$_}->[1]} keys %{$self->{'_id'}};
-    return %scores; 
+    return %scores;
 }
 
 =head2 get_score_by_id
@@ -325,7 +325,7 @@ sub has_linkout {
         return $self->{'_haslinkout'} eq 'Y' ? 1 : 0;
     } else  {
         return (grep {$_ eq 'LinkOut'} $self->get_databases) ? 1 : 0;
-    } 
+    }
 }
 
 =head2 has_neighbor
@@ -356,7 +356,7 @@ sub has_neighbor {
  Usage    : while (my $url = $linkset->next_UrlLink) {...}
  Function : iterate through UrlLink objects
  Returns  : Bio::Tools::EUtilities::Link::UrlLink
- Args     : 
+ Args     :
 
 =cut
 
@@ -375,7 +375,7 @@ sub next_UrlLink {
  Usage    : my @urls = $linkset->get_UrlLinks
  Function : returns all UrlLink objects
  Returns  : list of Bio::Tools::EUtilities::Link::UrlLink
- Args     : 
+ Args     :
 
 =cut
 
@@ -390,7 +390,7 @@ sub get_UrlLinks {
  Usage    : while (my $info = $linkset->next_LinkInfo) {...}
  Function : iterate through LinkInfo objects
  Returns  : Bio::Tools::EUtilities::Link::LinkInfo
- Args     : 
+ Args     :
 
 =cut
 
@@ -409,7 +409,7 @@ sub next_LinkInfo {
  Usage    : my @links = $linkset->get_LinkInfo
  Function : returns all LinkInfo objects
  Returns  : list of Bio::Tools::EUtilities::Link::LinkInfo
- Args     : 
+ Args     :
 
 =cut
 
@@ -425,7 +425,7 @@ sub get_LinkInfo {
             $info->rewind('links') # rewinds only links
  Function : 'rewinds' (resets) specified interators (all if no arg)
  Returns  : none
- Args     : [OPTIONAL] String: 
+ Args     : [OPTIONAL] String:
             'all'       - all iterators (default)
             'linkinfo' or 'linkinfos'  - LinkInfo objects only
             'urllinks'   - UrlLink objects only
@@ -436,7 +436,7 @@ sub get_LinkInfo {
     my %VALID_DATA = ('linkinfo' => 'linkinfo',
                       'linkinfos' => 'linkinfo',
                       'urllinks' => 'urllinks');
-    
+
     sub rewind {
         my ($self, $arg) = @_;
         $arg ||= 'all';
@@ -579,7 +579,7 @@ sub to_string {
         $string .= sprintf("%-*s%-*s%s\n",
             $level + 4, '',
             $pad - 4, 'ID', 'Score'
-            );        
+            );
         for my $id ($self->get_ids) {
             $string .= sprintf("%-*s%-*s%s\n",
                 $level + 4, '',
@@ -592,4 +592,3 @@ sub to_string {
 }
 
 1;
-

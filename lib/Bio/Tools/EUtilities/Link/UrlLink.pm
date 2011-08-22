@@ -1,7 +1,7 @@
 #
 # BioPerl module for Bio::Tools::EUtilities::Link::UrlLink
 #
-# Please direct questions and support issues to <bioperl-l@bioperl.org> 
+# Please direct questions and support issues to <bioperl-l@bioperl.org>
 #
 # Cared for by Chris Fields
 #
@@ -10,7 +10,7 @@
 # You may distribute this module under the same terms as perl itself
 #
 # POD documentation - main docs before the code
-# 
+#
 # Part of the EUtilities BioPerl package
 
 =head1 NAME
@@ -38,15 +38,15 @@ is much appreciated.
   bioperl-l@lists.open-bio.org               - General discussion
   http://www.bioperl.org/wiki/Mailing_lists  - About the mailing lists
 
-=head2 Support 
+=head2 Support
 
 Please direct usage questions or support issues to the mailing list:
 
 I<bioperl-l@bioperl.org>
 
-rather than to the module maintainer directly. Many experienced and 
-reponsive experts will be able look at the problem and quickly 
-address it. Please include a thorough description of the problem 
+rather than to the module maintainer directly. Many experienced and
+reponsive experts will be able look at the problem and quickly
+address it. Please include a thorough description of the problem
 with code and data examples if at all possible.
 
 =head2 Reporting Bugs
@@ -57,7 +57,7 @@ Bug reports can be submitted via the web.
 
   https://redmine.open-bio.org/projects/bioperl/
 
-=head1 AUTHOR 
+=head1 AUTHOR
 
 Email cjfields at bioperl dot org
 
@@ -79,10 +79,10 @@ use Data::Dumper;
 =head2 get_dbfrom
 
  Title    : get_dbfrom
- Usage    : 
- Function : 
- Returns  : 
- Args     : 
+ Usage    :
+ Function :
+ Returns  :
+ Args     :
 
 =cut
 
@@ -91,10 +91,10 @@ sub get_dbfrom { return shift->{'_dbfrom'}; }
 =head2 get_attribute
 
  Title    : get_attribute
- Usage    : 
- Function : 
- Returns  : 
- Args     : 
+ Usage    :
+ Function :
+ Returns  :
+ Args     :
 
 =cut
 
@@ -103,10 +103,10 @@ sub get_attribute { return shift->{'_attribute'}; }
 =head2 get_icon_url
 
  Title    : get_icon_url
- Usage    : 
- Function : 
- Returns  : 
- Args     : 
+ Usage    :
+ Function :
+ Returns  :
+ Args     :
 
 =cut
 
@@ -114,11 +114,11 @@ sub get_icon_url { return shift->{'_iconurl'}; }
 
 =head2 get_subject_type
 
- Title    : 
- Usage    : 
- Function : 
- Returns  : 
- Args     : 
+ Title    :
+ Usage    :
+ Function :
+ Returns  :
+ Args     :
 
 =cut
 
@@ -127,10 +127,10 @@ sub get_subject_type { return shift->{'_subjecttype'}; }
 =head2 get_url
 
  Title    : get_url
- Usage    : 
- Function : 
- Returns  : 
- Args     : 
+ Usage    :
+ Function :
+ Returns  :
+ Args     :
 
 =cut
 
@@ -146,10 +146,10 @@ sub get_url {
 =head2 get_link_name
 
  Title    : get_link_name
- Usage    : 
- Function : 
- Returns  : 
- Args     : 
+ Usage    :
+ Function :
+ Returns  :
+ Args     :
 
 =cut
 
@@ -158,10 +158,10 @@ sub get_link_name { return shift->{'_linkname'};  }
 =head2 get_provider_name
 
  Title    : get_provider_name
- Usage    : 
- Function : 
- Returns  : 
- Args     : 
+ Usage    :
+ Function :
+ Returns  :
+ Args     :
 
 =cut
 
@@ -170,10 +170,10 @@ sub get_provider_name { return shift->{'_provider_name'}; }
 =head2 get_provider_abbr
 
  Title    : get_provider_abbr
- Usage    : 
- Function : 
- Returns  : 
- Args     : 
+ Usage    :
+ Function :
+ Returns  :
+ Args     :
 
 =cut
 
@@ -182,10 +182,10 @@ sub get_provider_abbr { return shift->{'_provider_nameabbr'}; }
 =head2 get_provider_id
 
  Title    : get_provider_id
- Usage    : 
- Function : 
- Returns  : 
- Args     : 
+ Usage    :
+ Function :
+ Returns  :
+ Args     :
 
 =cut
 
@@ -194,10 +194,10 @@ sub get_provider_id { return shift->{'_provider_id'}[0]; }
 =head2 get_provider_icon_url
 
  Title    : get_provider_icon_url
- Usage    : 
- Function : 
- Returns  : 
- Args     : 
+ Usage    :
+ Function :
+ Returns  :
+ Args     :
 
 =cut
 
@@ -206,10 +206,10 @@ sub get_provider_icon_url { return shift->{'_provider_iconurl'}; }
 =head2 get_provider_url
 
  Title    : get_provider_url
- Usage    : 
- Function : 
- Returns  : 
- Args     : 
+ Usage    :
+ Function :
+ Returns  :
+ Args     :
 
 =cut
 
@@ -269,4 +269,3 @@ sub to_string {
 }
 
 1;
-

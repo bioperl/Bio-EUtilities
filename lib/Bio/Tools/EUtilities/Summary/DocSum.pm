@@ -1,7 +1,7 @@
 #
 # BioPerl module for Bio::Tools::EUtilities::Summary::DocSum
 #
-# Please direct questions and support issues to <bioperl-l@bioperl.org> 
+# Please direct questions and support issues to <bioperl-l@bioperl.org>
 #
 # Cared for by Chris Fields
 #
@@ -10,7 +10,7 @@
 # You may distribute this module under the same terms as perl itself
 #
 # POD documentation - main docs before the code
-# 
+#
 # Part of the EUtilities BioPerl package
 
 =head1 NAME
@@ -23,16 +23,16 @@ from esummary
   # Implement ItemContainerI
 
   # $foo is any ItemContainerI (current implementations are DocSum and Item itself)
-  
+
   while (my $item = $foo->next_Item) { # iterate through contained Items
      # do stuff here
   }
-  
+
   @items = $foo->get_Items;  # all Items in the container (hierarchy intact)
   @items = $foo->get_all_Items;  # all Items in the container (flattened)
   @items = $foo->get_Items_by_name('bar'); # Specifically named Items
   ($content) = $foo->get_contents_by_name('bar'); # content from specific Items
-  ($type) = $foo->get_type_by_name('bar'); # data type from specific Items    
+  ($type) = $foo->get_type_by_name('bar'); # data type from specific Items
 
 =head1 DESCRIPTION
 
@@ -52,15 +52,15 @@ is much appreciated.
   bioperl-l@lists.open-bio.org               - General discussion
   http://www.bioperl.org/wiki/Mailing_lists  - About the mailing lists
 
-=head2 Support 
+=head2 Support
 
 Please direct usage questions or support issues to the mailing list:
 
 I<bioperl-l@bioperl.org>
 
-rather than to the module maintainer directly. Many experienced and 
-reponsive experts will be able look at the problem and quickly 
-address it. Please include a thorough description of the problem 
+rather than to the module maintainer directly. Many experienced and
+reponsive experts will be able look at the problem and quickly
+address it. Please include a thorough description of the problem
 with code and data examples if at all possible.
 
 =head2 Reporting Bugs
@@ -96,10 +96,10 @@ use Bio::Tools::EUtilities::Summary::Item;
 =head2 new
 
  Title    : new
- Usage    : 
- Function : 
- Returns  : 
- Args     : 
+ Usage    :
+ Function :
+ Returns  :
+ Args     :
 
 =cut
 
@@ -264,7 +264,7 @@ sub _add_data {
         $self->{'_id'} = $data->{Id} if exists $data->{Id};
         for my $sd (@{ $data->{Item} } ) {
             $sd->{Id} = $data->{Id} if exists $data->{Id};
-            my $subdoc = 
+            my $subdoc =
                 Bio::Tools::EUtilities::Summary::Item->new(-datatype => 'item',
                                                   -verbose => $self->verbose);
             $subdoc->_add_data($sd);

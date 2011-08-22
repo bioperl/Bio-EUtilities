@@ -1,7 +1,7 @@
 #
 # BioPerl module for Bio::Tools::EUtilities
 #
-# Please direct questions and support issues to <bioperl-l@bioperl.org> 
+# Please direct questions and support issues to <bioperl-l@bioperl.org>
 #
 # Cared for by Chris Fields
 #
@@ -22,7 +22,7 @@ Bio::Tools::EUtilities - NCBI eutil XML parsers
                                        -eutil    => 'einfo',
                                        -file     => 'output.xml'
                                         );
-  
+
   # or HTTP::Response object...
   my $parser = Bio::Tools::EUtilities->new(
                                        -eutil => 'esearch',
@@ -32,53 +32,53 @@ Bio::Tools::EUtilities - NCBI eutil XML parsers
   @ids = $parser->get_ids(); # returns array or array ref of IDs
 
   # egquery, espell
-  
+
   $term = $parser->get_term(); # returns array or array ref of IDs
-  
+
   # elink, einfo
-  
+
   $db = $parser->get_database(); # returns database
-  
+
   # Query-related methods (esearch, egquery, espell data)
   # eutil data centered on use of search terms
-  
+
   my $ct = $parser->get_count; # uses optional database for egquery count
   my $translation = $parser->get_count;
-  
+
   my $corrected = $parser->get_corrected_query; # espell
 
   while (my $gquery = $parser->next_GlobalQuery) {
      # iterates through egquery data
   }
-  
+
   # Info-related methods (einfo data)
   # database-related information
-  
+
   my $desc = $parser->get_description;
   my $update = $parser->get_last_update;
   my $nm = $parser->get_menu_name;
   my $ct = $parser->get_record_count;
-  
+
   while (my $field = $parser->next_FieldInfo) {
       # ...
   }
   while (my $field = $parser->next_LinkInfo) {
       # ...
   }
-  
+
   # History methods (epost data, some data returned from elink)
   # data which enables one to retrieve and query against user-stored
   # information on the NCBI server
-  
+
   while (my $cookie = $parser->next_History) {
       # ...
   }
-  
+
   my @hists = $parser->get_Histories;
-  
+
   # Bio::Tools::EUtilities::Summary (esummary data)
   # information on a specific database record
-  
+
   # retrieve nested docsum data
   while (my $docsum = $parser->next_DocSum) {
       print "ID:",$docsum->get_ids,"\n";
@@ -92,7 +92,7 @@ Bio::Tools::EUtilities - NCBI eutil XML parsers
           }
       }
   }
-  
+
   # retrieve flattened item list per DocSum
   while (my $docsum = $parser->next_DocSum) {
      my @items = $docsum->get_all_DocSum_Items;
@@ -130,15 +130,15 @@ is much appreciated.
   bioperl-l@lists.open-bio.org               - General discussion
   http://www.bioperl.org/wiki/Mailing_lists  - About the mailing lists
 
-=head2 Support 
+=head2 Support
 
 Please direct usage questions or support issues to the mailing list:
 
 I<bioperl-l@bioperl.org>
 
-rather than to the module maintainer directly. Many experienced and 
-reponsive experts will be able look at the problem and quickly 
-address it. Please include a thorough description of the problem 
+rather than to the module maintainer directly. Many experienced and
+reponsive experts will be able look at the problem and quickly
+address it. Please include a thorough description of the problem
 with code and data examples if at all possible.
 
 =head2 Reporting Bugs
@@ -149,7 +149,7 @@ Bug reports can be submitted via the web.
 
   https://redmine.open-bio.org/projects/bioperl/
 
-=head1 AUTHOR 
+=head1 AUTHOR
 
 Email cjfields at bioperl dot org
 
@@ -281,7 +281,7 @@ sub response {
     my ($self, $response) = @_;
     if ($response) {
         $self->throw('Not an HTTP::Response object') unless (ref $response && $response->isa('HTTP::Response'));
-        $self->{'_response'} = $response; 
+        $self->{'_response'} = $response;
     }
     return $self->{'_response'};
 }
@@ -304,7 +304,7 @@ sub parameter_base {
     if ($pb) {
         $self->throw('Not an Bio::ParameterBaseI object') unless (ref $pb && $pb->isa('Bio::ParameterBaseI'));
         $self->warn('Not an Bio::Tools::EUtilities::EUtilParameters object; may experience some turbulence...') unless (ref $pb && $pb->isa('Bio::Tools::EUtilities::EUtilParameters'));
-        $self->{'_parameter_base'} = $pb; 
+        $self->{'_parameter_base'} = $pb;
     }
     return $self->{'_parameter_base'};
 }
@@ -358,7 +358,7 @@ my %EUTIL_DATA = (
     'epost'     => [],
     'egquery'   => [],
     'einfo'     => [qw(Field Link)],
-    'elink'     => [qw(LinkSet LinkSetDb LinkSetDbHistory IdUrlSet 
+    'elink'     => [qw(LinkSet LinkSetDb LinkSetDbHistory IdUrlSet
                         Id IdLinkSet ObjUrl Link LinkInfo)],
     'espell'    => [qw(Original Replaced)],
     'esearch'   => [qw(Id ErrorList WarningList)],
@@ -384,7 +384,7 @@ sub parse_data {
     if ($simple->{InvalidIdList}) {
         $self->warn("NCBI $eutil error: Invalid ID List".$simple->{InvalidIdList});
         return;
-    }    
+    }
     if ($simple->{ErrorList} || $simple->{WarningList}) {
         my @errorlist = @{ $simple->{ErrorList} } if $simple->{ErrorList};
         my @warninglist = @{ $simple->{WarningList} } if $simple->{WarningList};
@@ -393,7 +393,7 @@ sub parse_data {
             my $messages = join("\n\t",map {"$_  [".$error->{$_}.']'}
                                 grep {!ref $error->{$_}} keys %$error);
             $err_warn .= "Error : $messages";
-        }    
+        }
         for my $warn (@warninglist) {
             my $messages = join("\n\t",map {"$_  [".$warn->{$_}.']'}
                                 grep {!ref $warn->{$_}} keys %$warn);
@@ -404,7 +404,7 @@ sub parse_data {
         # don't return as some data may still be useful
     }
     delete $self->{'_response'} unless $self->cache_response;
-    $self->{'_parsed'} = 1;    
+    $self->{'_parsed'} = 1;
     $self->_add_data($simple);
 }
 
@@ -472,7 +472,7 @@ sub to_string {
            -file : file to print to
            -fh   : filehandle to print to (cannot be used concurrently with file)
            -cb   : coderef to use in place of default print method.  This is
-                   passed in the parser object 
+                   passed in the parser object
            -wrap : number of columns to wrap default text output to (def = 80)
  Notes    : only applicable for einfo.  If -file or -fh are not defined,
             prints to STDOUT
@@ -601,12 +601,12 @@ sub get_db {
 
  Title    : get_databases
  Usage    : my @dbs = $parser->get_databases
- Function : returns list of databases 
+ Function : returns list of databases
  Returns  : array of strings
  Args     : none
  Notes    : This is guaranteed to return a list of databases. For a single
             database use the convenience method get_db/get_database
-            
+
             egquery    : list of all databases in the query
             einfo      : the queried database, or the available databases
             espell     : the queried database
@@ -629,7 +629,7 @@ sub get_databases {
     } elsif ($eutil eq 'elink') {
         # only unique dbs
         my %tmp;
-        @dbs = sort grep {!$tmp{$_}++} 
+        @dbs = sort grep {!$tmp{$_}++}
             map {($_->get_databases)} $self->get_LinkSets;
     } elsif ($self->parameter_base) {
         if ($self->parameter_base->eutil eq 'elink') {
@@ -671,7 +671,7 @@ sub get_dbs {
 
 sub next_History {
     my $self = shift;
-    $self->parse_data unless $self->data_parsed;    
+    $self->parse_data unless $self->data_parsed;
     $self->{'_histories_it'} = $self->generate_iterator('histories')
         if (!exists $self->{'_histories_it'});
     my $hist =  $self->{'_histories_it'}->();
@@ -679,7 +679,7 @@ sub next_History {
 
 =head2 next_cookie (alias for next_History)
 
-=cut 
+=cut
 
 sub next_cookie {
     return shift->next_History;
@@ -782,7 +782,7 @@ sub get_translation_from {
  Function: replaced string used in place of the original query term in translation_from()
  Returns : string
  Args    : none
- Note    : only applicable for esearch 
+ Note    : only applicable for esearch
 
 =cut
 
@@ -807,7 +807,7 @@ sub get_translation_to {
 
 sub get_retstart {
     my $self = shift;
-    $self->parse_data unless $self->data_parsed;    
+    $self->parse_data unless $self->data_parsed;
     return $self->{'_retstart'};
 }
 
@@ -826,7 +826,7 @@ sub get_retstart {
 
 sub get_retmax {
     my $self = shift;
-    $self->parse_data unless $self->data_parsed;    
+    $self->parse_data unless $self->data_parsed;
     return $self->{'_retmax'};
 }
 
@@ -870,7 +870,7 @@ sub get_corrected_query {
  Title    : get_replaced_terms
  Usage    : my $term = $eutil->get_replaced_terms
  Function : returns array of strings replaced in the query
- Returns  : string 
+ Returns  : string
  Args     : none
  Notes    : only applicable for espell
 
@@ -898,7 +898,7 @@ sub get_replaced_terms {
 
 sub next_GlobalQuery {
     my $self = shift;
-    $self->parse_data unless $self->data_parsed;    
+    $self->parse_data unless $self->data_parsed;
     $self->{'_globalqueries_it'} = $self->generate_iterator('globalqueries')
         if (!exists $self->{'_globalqueries_it'});
     $self->{'_globalqueries_it'}->();
@@ -928,7 +928,7 @@ sub get_GlobalQueries {
             $docsum->print_GlobalQueries(-fh => $fh, -callback => $coderef);
  Function : prints item data for all global queries.  The default printing
             method is each item per DocSum is printed with relevant values if
-            present in a simple table using Text::Wrap. 
+            present in a simple table using Text::Wrap.
  Returns  : none
  Args     : [optional]
            -file : file to print to
@@ -1021,9 +1021,9 @@ sub print_DocSums {
  Title    : get_available_databases
  Usage    : my @dbs = $info->get_available_databases
  Function : returns list of available eutil-compatible database names
- Returns  : Array of strings 
+ Returns  : Array of strings
  Args     : none
- Notes    : only applicable for einfo. 
+ Notes    : only applicable for einfo.
 
 =cut
 
@@ -1042,7 +1042,7 @@ sub get_available_databases {
  Function : returns database record count
  Returns  : integer
  Args     : none
- Notes    : only applicable for einfo.  
+ Notes    : only applicable for einfo.
 
 =cut
 
@@ -1059,7 +1059,7 @@ sub get_record_count {
  Function : returns string containing time/date stamp for last database update
  Returns  : integer
  Args     : none
- Notes    : only applicable for einfo. 
+ Notes    : only applicable for einfo.
 
 =cut
 
@@ -1076,13 +1076,13 @@ sub get_last_update {
  Function : returns string of database menu name
  Returns  : string
  Args     : none
- Notes    : only applicable for einfo. 
+ Notes    : only applicable for einfo.
 
 =cut
 
 sub get_menu_name {
     my $self = shift;
-    $self->parse_data unless $self->data_parsed;    
+    $self->parse_data unless $self->data_parsed;
     exists $self->{'_menuname'} ? return $self->{'_menuname'} :
     exists $self->{'_menu'} ? return $self->{'_menu'} :
     return;
@@ -1095,7 +1095,7 @@ sub get_menu_name {
  Function : returns database description
  Returns  : string
  Args     : none
- Notes    : only applicable for einfo. 
+ Notes    : only applicable for einfo.
 
 =cut
 
@@ -1119,7 +1119,7 @@ sub get_description {
 
 sub next_FieldInfo {
     my $self = shift;
-    $self->parse_data unless $self->data_parsed;    
+    $self->parse_data unless $self->data_parsed;
     $self->{'_fieldinfo_it'} = $self->generate_iterator('fieldinfo')
         if (!exists $self->{'_fieldinfo_it'});
     $self->{'_fieldinfo_it'}->();
@@ -1132,13 +1132,13 @@ sub next_FieldInfo {
  Function : returns list of FieldInfo objects
  Returns  : array (FieldInfo objects)
  Args     : none
- Notes    : only applicable for einfo. 
+ Notes    : only applicable for einfo.
 
 =cut
 
 sub get_FieldInfo {
     my $self = shift;
-    $self->parse_data unless $self->data_parsed;        
+    $self->parse_data unless $self->data_parsed;
     return ref $self->{'_fieldinfo'} ? @{ $self->{'_fieldinfo'} } : return ();
 }
 
@@ -1158,7 +1158,7 @@ sub get_FieldInfo {
 
 sub next_LinkInfo {
     my $self = shift;
-    $self->parse_data unless $self->data_parsed;    
+    $self->parse_data unless $self->data_parsed;
     $self->{'_linkinfo_it'} = $self->generate_iterator('linkinfo')
         if (!exists $self->{'_linkinfo_it'});
     $self->{'_linkinfo_it'}->();
@@ -1171,13 +1171,13 @@ sub next_LinkInfo {
  Function : returns list of LinkInfo objects
  Returns  : array (LinkInfo objects)
  Args     : none
- Notes    : only applicable for einfo.  
+ Notes    : only applicable for einfo.
 
 =cut
 
 sub get_LinkInfo {
     my $self = shift;
-    $self->parse_data unless $self->data_parsed;        
+    $self->parse_data unless $self->data_parsed;
     return ref $self->{'_linkinfo'} ? @{ $self->{'_linkinfo'} } : return ();
 }
 
@@ -1263,7 +1263,7 @@ sub next_LinkSet {
  Function : returns list of LinkSets objects
  Returns  : array (LinkSet objects)
  Args     : none
- Notes    : only applicable for elink.  
+ Notes    : only applicable for elink.
 
 =cut
 
@@ -1505,7 +1505,7 @@ sub callback {
         my $obj = shift;
         return $obj->to_string."\n";
     };
-    
+
     my %HANDLER = (
         'DocSum'        => 1,
         'FieldInfo'     => 1,
@@ -1514,12 +1514,12 @@ sub callback {
         'LinkSet'       => 1,
         'all'           => 1,
                    );
-    
+
     sub _print_handler {
         my $self = shift;
         my ($file, $fh, $cb, $wrap, $type, $all) = $self->_rearrange([qw(FILE FH CB WRAP TYPE ALL)], @_);
         $type ||= 'all';
-        
+
         # default formatting delegates to_string
         if (!$cb) {
             $self->throw("Type $type not registered with print handler, exiting...")
@@ -1528,12 +1528,12 @@ sub callback {
         } else {
             $self->throw("Callback must be a code reference") if ref $cb ne 'CODE';
         }
-        
+
         $file ||= $fh;
         $self->throw("Have defined both file and filehandle; only use one!") if $file && $fh;
         my $io = ($file) ? Bio::Root::IO->new(-input => $file, -flush => 1) :
                  Bio::Root::IO->new(-flush => 1); # defaults to STDOUT
-                 
+
         if ($type eq 'all') {
             my $string = $cb->($self);
             $io->_print($string) if $string;
@@ -1588,7 +1588,7 @@ sub _load_eutil_module {
         print STDERR <<END;
 $self: data module $module cannot be found
 Exception $@
-For more information about the EUtilities system please see the EUtilities docs. 
+For more information about the EUtilities system please see the EUtilities docs.
 END
        ;
     }
