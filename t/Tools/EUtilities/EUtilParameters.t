@@ -7,10 +7,10 @@ use warnings;
 
 BEGIN {
     use lib '.';
-	use Bio::Root::Test;
+    use Bio::Root::Test;
 
-	test_begin(-tests => 13,
-			   -requires_modules =>
+    test_begin(-tests => 13,
+               -requires_modules =>
                [qw(URI HTTP::Request)]);
 
     use_ok('Bio::Tools::EUtilities::EUtilParameters');

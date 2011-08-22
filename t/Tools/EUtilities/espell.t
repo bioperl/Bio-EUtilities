@@ -7,10 +7,10 @@ use warnings;
 
 BEGIN {
     use lib '.';
-	use Bio::Root::Test;
+    use Bio::Root::Test;
 
-	test_begin(-tests => 22,
-			   -requires_module => 'XML::Simple');
+    test_begin(-tests => 22,
+               -requires_module => 'XML::Simple');
 
     use_ok('Bio::Tools::EUtilities');
     use_ok('Bio::Tools::EUtilities::EUtilParameters');
@@ -43,8 +43,8 @@ is($eutil->get_translation_to, undef,'get_translation_to');
 
 # add Parameters
 my $pb = Bio::Tools::EUtilities::EUtilParameters->new(-eutil => 'espell',
-									   -db => 'protein',
-									   -term => 'Notch AND Mus musculus');
+                                       -db => 'protein',
+                                       -term => 'Notch AND Mus musculus');
 
 is($eutil->get_db, 'pubmed', 'get_db');
 is(($eutil->get_dbs)[0], 'pubmed', 'get_dbs');

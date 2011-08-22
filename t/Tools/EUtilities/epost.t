@@ -6,10 +6,10 @@ use warnings;
 
 BEGIN {
     use lib '.';
-	use Bio::Root::Test;
+    use Bio::Root::Test;
 
-	test_begin(-tests => 17,
-			   -requires_module => 'XML::Simple');
+    test_begin(-tests => 17,
+               -requires_module => 'XML::Simple');
 
     use_ok('Bio::Tools::EUtilities');
     use_ok('Bio::Tools::EUtilities::EUtilParameters');
@@ -45,8 +45,8 @@ my @ids = qw(1621261 89318838 68536103 20807972 730439);
 
 # add Parameters
 my $pb = Bio::Tools::EUtilities::EUtilParameters->new(-eutil => 'epost',
-									   -db => 'protein',
-									   -id => \@ids);
+                                       -db => 'protein',
+                                       -id => \@ids);
 
 $eutil->parameter_base($pb);
 

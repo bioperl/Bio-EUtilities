@@ -208,7 +208,7 @@ sub new {
         return $self;
     } else {
         my %param = @args;
-		@param{ map { lc $_ } keys %param } = values %param; # lowercase keys
+        @param{ map { lc $_ } keys %param } = values %param; # lowercase keys
         my $eutil = $param{'-eutil'} || $class->throw("Need eutil to make instance");
         return unless( $class->_load_eutil_module( $DATA_MODULE{$eutil}) );
         return "Bio::Tools::EUtilities::$DATA_MODULE{$eutil}"->new(-datatype => lc $DATA_MODULE{$eutil},

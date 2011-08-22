@@ -37,12 +37,12 @@ BEGIN {
     $DEBUG = $ENV{'BIOPERLDEBUG'} || 0;
     # this seems to work for perl 5.6 and perl 5.8
 
-	use Bio::Root::Test;
+    use Bio::Root::Test;
 
-	test_begin(-tests               => $NUMTESTS,
-			   -requires_modules    => [qw(XML::Simple LWP::UserAgent)],
-			   -requires_email      => 1,
-			  );
+    test_begin(-tests               => $NUMTESTS,
+               -requires_modules    => [qw(XML::Simple LWP::UserAgent)],
+               -requires_email      => 1,
+              );
 
     use_ok('Bio::DB::EUtilities');
     use_ok('LWP::UserAgent');
