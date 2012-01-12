@@ -92,6 +92,8 @@ methods are usually preceded with a _
 # Let the code begin...
 
 package Bio::Tools::EUtilities::History;
+# VERSION
+
 use strict;
 use warnings;
 

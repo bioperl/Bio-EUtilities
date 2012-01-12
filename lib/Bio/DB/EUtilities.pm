@@ -192,6 +192,8 @@ preceded with a _
 # Let the code begin...
 
 package Bio::DB::EUtilities;
+# VERSION
+
 use strict;
 use Bio::Tools::EUtilities::EUtilParameters;
 use Bio::Tools::EUtilities;

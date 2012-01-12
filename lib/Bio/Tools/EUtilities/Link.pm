@@ -73,6 +73,8 @@ preceded with a _
 # Let the code begin...
 
 package Bio::Tools::EUtilities::Link;
+# VERSION
+
 use strict;
 use warnings;
 use Data::Dumper;

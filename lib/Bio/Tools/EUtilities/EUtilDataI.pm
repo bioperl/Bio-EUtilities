@@ -97,6 +97,8 @@ preceded with a _
 =cut
 
 package Bio::Tools::EUtilities::EUtilDataI;
+# VERSION
+
 use strict;
 use warnings;
 use Text::Wrap qw(wrap);

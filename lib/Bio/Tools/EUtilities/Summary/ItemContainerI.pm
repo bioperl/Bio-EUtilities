@@ -89,6 +89,8 @@ preceded with a _
 =cut
 
 package Bio::Tools::EUtilities::Summary::ItemContainerI;
+# VERSION
+
 use strict;
 use warnings;
 

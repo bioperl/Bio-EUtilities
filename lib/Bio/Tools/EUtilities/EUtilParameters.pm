@@ -105,6 +105,8 @@ preceded with a _
 # Let the code begin...
 
 package Bio::Tools::EUtilities::EUtilParameters;
+# VERSION
+
 use strict;
 use warnings;
 

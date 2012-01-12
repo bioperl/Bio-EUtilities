@@ -87,6 +87,8 @@ preceded with a _
 # Let the code begin...
 
 package Bio::Tools::EUtilities::Query;
+# VERSION
+
 use strict;
 use warnings;
 use Bio::Tools::EUtilities::Query::GlobalQuery;

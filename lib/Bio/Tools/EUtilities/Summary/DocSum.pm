@@ -86,6 +86,8 @@ preceded with a _
 # Let the code begin...
 
 package Bio::Tools::EUtilities::Summary::DocSum;
+# VERSION
+
 
 use strict;
 use warnings;

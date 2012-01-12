@@ -105,6 +105,8 @@ methods are usually preceded with a _
 # Let the code begin...
 
 package Bio::Tools::EUtilities::Info::FieldInfo;
+# VERSION
+
 use base qw(Bio::Root::Root Bio::Tools::EUtilities::EUtilDataI);
 use strict;
 use warnings;

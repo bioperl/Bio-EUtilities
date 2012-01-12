@@ -72,6 +72,8 @@ preceded with a _
 # Let the code begin...
 
 package Bio::Tools::EUtilities::Link::UrlLink;
+# VERSION
+
 
 use base qw(Bio::Root::Root Bio::Tools::EUtilities::EUtilDataI);
 use Data::Dumper;
