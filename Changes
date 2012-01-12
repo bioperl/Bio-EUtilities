@@ -3,3 +3,4 @@ Revision history for Bio-EUtilities
 {{$NEXT}}
 
   * Initial split from bioperl-live; history carried over [cjfields]
+  * No changes from last BioPerl release beyond splitting off.

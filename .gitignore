@@ -6,7 +6,7 @@
 *(Autosaved)blib*
 Build
 Build.bat
-_build*
+.build*
 pm_to_blib*
 *.tar.gz
 .lwpcookies
