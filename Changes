@@ -2,5 +2,7 @@ Revision history for Bio-EUtilities
 
 {{$NEXT}}
 
+1.70      2012-01-12 14:38:27 America/Chicago
+
   * Initial split from bioperl-live; history carried over [cjfields]
   * No changes from last BioPerl release beyond splitting off.
