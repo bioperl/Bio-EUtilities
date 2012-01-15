@@ -77,7 +77,6 @@ package Bio::Tools::EUtilities::Link;
 
 use strict;
 use warnings;
-use Data::Dumper;
 
 use base qw(Bio::Tools::EUtilities Bio::Tools::EUtilities::EUtilDataI);
 
