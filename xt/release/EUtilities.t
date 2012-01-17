@@ -8,7 +8,7 @@ our $DEBUG;
 our %EUTILS;
 
 BEGIN {
-    $NUMTESTS = 4; # base number of tests (those not in blocks)
+    $NUMTESTS = 5; # base number of tests (those not in blocks)
 
     # I have set up eutils tests to run in sections for easier test maintenance
     # and keeping track of problematic tests. The below hash is the list of
@@ -34,10 +34,10 @@ BEGIN {
                             'sub'   => \&egquery},
         );
     $NUMTESTS += $EUTILS{$_}->{'tests'} for (keys %EUTILS);
-    $DEBUG = $ENV{'BIOPERLDEBUG'} || 0;
     # this seems to work for perl 5.6 and perl 5.8
 
     use Bio::Root::Test;
+    $DEBUG = test_debug() || 0;
 
     test_begin(-tests               => $NUMTESTS,
                -requires_modules    => [qw(XML::Simple LWP::UserAgent)],
@@ -50,42 +50,46 @@ BEGIN {
     use_ok('Bio::Tools::EUtilities::EUtilParameters');
 }
 
-my $email = test_email();
+my $email = $ENV{BIOPERL_EMAIL};
 
-diag("Using $email for tests") if $DEBUG;
+SKIP: {
+    ok($email, 'Make sure email is set (BIOPERL_EMAIL)');
+    skip("Must provide a valid email for tests", $NUMTESTS) if !defined($email);
+    diag("Using $email for tests") if $DEBUG;
+    
+    # NOTE : Bio::DB::EUtilities is just a specialized pipeline to get any
+    # data available via NCBI's Entrez interface, with a few convenience methods
+    # to get UIDs and other additional information.  All data returned
+    # using EFetch is raw (not Bioperl objects) and is meant to be piped into
+    # other Bioperl modules at a later point for further processing
+    
+    #   protein acc
+    my @acc = qw(MUSIGHBA1 P18584 CH402638);
+    
+    # protein GI
+    my @ids = sort qw(1621261 89318838 68536103 20807972 730439);
+    
+    # test search term
+    my $term = 'dihydroorotase AND human';
+    
+    my ($eutil, $response);
+    
+    my %dbs = (taxonomy => 1,
+               nucleotide => 1,
+               pubmed => 1);
+    my %links = (protein_taxonomy => 1,
+                 protein_nucleotide => 1,
+                 protein_nucleotide_wgs => 1,
+                 protein_pubmed => 1,
+                 protein_pubmed_refseq => 1
+                 );
+    
+    # this loops through the required tests, only running what is in %EUTILS
+    for my $test (keys %EUTILS) {
+        $EUTILS{$test}->{'sub'}->();
+    }
 
-# NOTE : Bio::DB::EUtilities is just a specialized pipeline to get any
-# data available via NCBI's Entrez interface, with a few convenience methods
-# to get UIDs and other additional information.  All data returned
-# using EFetch is raw (not Bioperl objects) and is meant to be piped into
-# other Bioperl modules at a later point for further processing
-
-#   protein acc
-my @acc = qw(MUSIGHBA1 P18584 CH402638);
-
-# protein GI
-my @ids = sort qw(1621261 89318838 68536103 20807972 730439);
-
-# test search term
-my $term = 'dihydroorotase AND human';
-
-my ($eutil, $response);
-
-my %dbs = (taxonomy => 1,
-           nucleotide => 1,
-           pubmed => 1);
-my %links = (protein_taxonomy => 1,
-             protein_nucleotide => 1,
-             protein_nucleotide_wgs => 1,
-             protein_pubmed => 1,
-             protein_pubmed_refseq => 1
-             );
-
-# this loops through the required tests, only running what is in %EUTILS
-for my $test (keys %EUTILS) {
-    $EUTILS{$test}->{'sub'}->();
 }
-
 # Simple EFetch
 
 sub efetch {
@@ -476,4 +480,4 @@ sub egquery {
     }
 }
 
-1;
+
