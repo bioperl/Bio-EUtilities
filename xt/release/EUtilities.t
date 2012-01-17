@@ -30,12 +30,6 @@ my $email = $ENV{BIOPERL_EMAIL};
 
 my ($eutil, $response);
 
-# NOTE : Bio::DB::EUtilities is just a specialized pipeline to get any
-# data available via NCBI's Entrez interface, with a few convenience methods
-# to get UIDs and other additional information.  All data returned
-# using EFetch is raw (not Bioperl objects) and is meant to be piped into
-# other Bioperl modules at a later point for further processing
-
 #   protein acc
 my @acc = qw(MUSIGHBA1 P18584 CH402638);
 
