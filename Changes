@@ -1,10 +1,9 @@
-Revision history for Bio-EUtilities  
+Revision history for Bio-EUtilities
 
 {{$NEXT}}
   * Add explicit prereqs
-  * Add Bio::Root::Test as a build requirement (this was missed by Dist::Zilla)
-    This *should* allow older versions of BioPerl (req. Test::More) to work for
-    regression tests. 
+  * Migrate all tests from Bio::Root::Test, add Test::More as
+    a build requirement, add helper module for test loading
   * Remove Data::Dumper from modules
 
 1.71      2012-01-12 16:20:26 America/Chicago
