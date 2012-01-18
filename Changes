@@ -1,6 +1,8 @@
 Revision history for Bio-EUtilities
 
 {{$NEXT}}
+
+1.72      2012-01-17 22:12:06 America/Chicago
   * Add explicit prereqs
   * Migrate all tests from Bio::Root::Test, add Test::More as
     a build requirement, add helper module for test loading
