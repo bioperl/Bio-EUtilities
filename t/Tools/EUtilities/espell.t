@@ -5,16 +5,11 @@
 use strict;
 use warnings;
 
-BEGIN {
-    use lib '.';
-    use Bio::Root::Test;
+use Test::More tests => 20;
 
-    test_begin(-tests => 22,
-               -requires_module => 'XML::Simple');
-
-    use_ok('Bio::Tools::EUtilities');
-    use_ok('Bio::Tools::EUtilities::EUtilParameters');
-}
+use Bio::Tools::EUtilities;
+use Bio::Tools::EUtilities::EUtilParameters;
+use inc::TestHelper qw(test_input_file);
 
 # Normal esearch
 my $eutil = Bio::Tools::EUtilities->new(

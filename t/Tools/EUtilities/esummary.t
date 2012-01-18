@@ -3,17 +3,11 @@
 
 use strict;
 use warnings;
+use Test::More tests => 81;
 
-BEGIN {
-    use lib '.';
-    use Bio::Root::Test;
-
-    test_begin(-tests => 83,
-               -requires_module => 'XML::Simple');
-
-    use_ok('Bio::Tools::EUtilities');
-    use_ok('Bio::Tools::EUtilities::EUtilParameters');
-}
+use Bio::Tools::EUtilities;
+use Bio::Tools::EUtilities::EUtilParameters;
+use inc::TestHelper qw(test_input_file);
 
 my $eutil = Bio::Tools::EUtilities->new(
     -eutil      => 'esummary',

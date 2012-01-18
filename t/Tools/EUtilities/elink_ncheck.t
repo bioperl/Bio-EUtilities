@@ -4,17 +4,10 @@
 use strict;
 use warnings;
 
+use Test::More tests => 58;
 
-BEGIN {
-    use lib '.';
-    use Bio::Root::Test;
-
-    test_begin(-tests => 60,
-               -requires_module => 'XML::Simple');
-
-    use_ok('Bio::Tools::EUtilities');
-    use_ok('Bio::Tools::EUtilities::EUtilParameters');
-}
+use Bio::Tools::EUtilities;
+use inc::TestHelper qw(test_input_file);
 
 # check -correspondence => 0 (default) - this is set up to return the
 # exact same thing as correspondece = 1, tested below)

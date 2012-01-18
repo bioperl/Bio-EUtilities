@@ -1,4 +1,4 @@
-package TestHelper;
+package inc::TestHelper;
 use strict;
 use warnings;
 

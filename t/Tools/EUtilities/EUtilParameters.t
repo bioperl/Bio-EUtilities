@@ -5,16 +5,10 @@
 use strict;
 use warnings;
 
-BEGIN {
-    use lib '.';
-    use Bio::Root::Test;
+use Test::More tests => 12;
 
-    test_begin(-tests => 13,
-               -requires_modules =>
-               [qw(URI HTTP::Request)]);
-
-    use_ok('Bio::Tools::EUtilities::EUtilParameters');
-}
+use Bio::Tools::EUtilities::EUtilParameters;
+use inc::TestHelper qw(test_input_file);
 
 my @ids = qw(6679096 31543332 134288853 483581 20805941 187951953 169158074
 123228044 148676374 114326469 148707003 187952787 123233807 148694865 148694864

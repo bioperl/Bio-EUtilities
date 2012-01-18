@@ -1,4 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Komodo Project File - DO NOT EDIT -->
 <project id="07a1c0fe-573a-6644-bfaf-a6c919e09a69" kpf_version="5" name="eutils.komodoproject">
+<preference-set idref="07a1c0fe-573a-6644-bfaf-a6c919e09a69">
+  <long id="caretStyle">1</long>
+  <long id="caretWidth">1</long>
+  <boolean id="checkDiskFile">1</boolean>
+  <boolean id="checkNetworkDiskFile">1</boolean>
+  <string id="donotask_action_close_deleted_files"></string>
+  <string id="donotask_action_dragdrop_uri"></string>
+  <string id="donotask_action_reload_changed_files"></string>
+  <boolean id="donotask_buffer_conflicts_with_file_on_disk">0</boolean>
+  <boolean id="donotask_close_deleted_files">0</boolean>
+  <boolean id="donotask_dragdrop_uri">0</boolean>
+  <boolean id="donotask_reload_changed_files">0</boolean>
+  <boolean id="donotask_revert_buffer">0</boolean>
+  <boolean id="donotask_treat_large_documents_as_text">0</boolean>
+  <string id="perlDefaultInterpreter">/Users/cjfields/perl5/perlbrew/perls/perl-5.14.2/bin/perl</string>
+  <string id="perlExtraPaths">/Users/cjfields/bioperl/bioperl-live:/Users/cjfields/bioperl/Bio-EUtilities/lib:/Users/cjfields/bioperl/Bio-Parse/lib:/Users/cjfields/bioperl/biome/lib:/Users/cjfields/bioperl/bioperl-db/lib:/Users/cjfields/bioperl/bioperl-run/lib:/Users/cjfields/bioperl/Bio-EUtilities</string>
+  <boolean id="perl_debuggerlogenabled">0</boolean>
+  <string id="perl_debuggerlogpath"></string>
+  <boolean id="perl_lintOption_includeCurrentDirForLinter">1</boolean>
+  <boolean id="scrollEndAtLastLine">0</boolean>
+  <long id="scrollWidth">2000</long>
+  <boolean id="scrollWidthTracking">0</boolean>
+  <boolean id="select_most_recent_buffer_on_buffer_close">0</boolean>
+  <boolean id="showEOL">0</boolean>
+  <boolean id="showLineNumbers">1</boolean>
+  <boolean id="showWhitespace">0</boolean>
+  <long id="ySlop">5</long>
+</preference-set>
 </project>

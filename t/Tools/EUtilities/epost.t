@@ -4,16 +4,12 @@
 use strict;
 use warnings;
 
-BEGIN {
-    use lib '.';
-    use Bio::Root::Test;
+use Test::More tests => 15;
 
-    test_begin(-tests => 17,
-               -requires_module => 'XML::Simple');
+use Bio::Tools::EUtilities;
+use Bio::Tools::EUtilities::EUtilParameters;
 
-    use_ok('Bio::Tools::EUtilities');
-    use_ok('Bio::Tools::EUtilities::EUtilParameters');
-}
+use inc::TestHelper qw(test_input_file);
 
 my $eutil = Bio::Tools::EUtilities->new(
     -eutil      => 'epost',
