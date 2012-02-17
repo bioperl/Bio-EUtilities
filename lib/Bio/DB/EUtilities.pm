@@ -133,11 +133,6 @@ between calls.
 
 Setting history is a bit inconsistent, so maybe use a common alias for this?
 
-=item * Splitting out of core
-
-This could easily belong in its own distribution, the only tie to BioPerl is the
-use of Bio::Root::Root.
-
 =item * Moosify?
 
 Not necessary, but it might make things easier and more maintainable in the long
