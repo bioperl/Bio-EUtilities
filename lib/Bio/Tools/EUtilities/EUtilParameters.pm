@@ -148,7 +148,7 @@ my %MODE = (
         'mode'     => ['GET','POST'],
         'location' => 'esummary.fcgi',
         'params'   => [qw(db retmode id retmax retstart rettype tool email
-                       WebEnv query_key)],
+                       version WebEnv query_key)],
                    },
     'elink'     => {
         'mode'     => ['GET','POST'],
