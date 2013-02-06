@@ -351,8 +351,7 @@ check_dir($_) foreach ($save, $gene_dir, $mrna_dir, $prot_dir);
 my $log_file  = File::Spec->catfile ($save, 'extractor.log');
 open (LOG, ">", $log_file) or die "Couldn't open file $log_file for writing: $!";
 
-## TODO should also say the version
-log_it (1, "This is bp_genbank_ref_extractor on ". &get_time);
+log_it (1, "This is bp_genbank_ref_extractor on Bioperl $Bio::Root::Version::VERSION on ". &get_time);
 
 ################################################################################
 ## Everything is ready. Start accessing the database
