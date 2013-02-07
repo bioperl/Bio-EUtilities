@@ -22,6 +22,7 @@ use Cwd;                        # Determines current working directory
 use File::Spec;                 # Perform operation on file names
 use Bio::SeqIO;                 # Handler for SeqIO Formats
 use Bio::DB::EUtilities;        # Retrieve entries from Entrez
+use Bio::Root::Version;         # Get global bioperl-live version number
 
 =head1 NAME
 
