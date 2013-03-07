@@ -106,6 +106,10 @@ sub genes_option_parsing {
   }
 }
 
+=item B<--help>
+
+Display the documentation (this text).
+
 =item B<--limit>
 
 When making a query, limit the result to these first specific results. This is to
@@ -327,6 +331,7 @@ GetOptions(
             'up|upstream=i'       => \$upstream,
             'verbose|v'           => \$verbose,
             'very-verbose|vv'     => \$very_verbose,
+            'h|help'              => sub { exec('perldoc', $0); exit; }
           ) or die "Error processing options";
 ## It is necessary to check success of GetOptions since:
 ## ''GetOptions returns true to indicate success. It returns false when the function
