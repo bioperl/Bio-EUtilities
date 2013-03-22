@@ -8,11 +8,14 @@ Build
 Build.bat
 .build*
 pm_to_blib*
-*.tar.gz
 .lwpcookies
 cover_db
 pod2htm*.tmp
+
+# ignore text editors stuff
 .emacs.*
-blib*
-*.bak
-MYMETA.yml
+.*\.komodoproject
+eutils.komodoproject
+
+# ignore build
+Bio-EUtilities*
