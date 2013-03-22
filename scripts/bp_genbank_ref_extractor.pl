@@ -588,7 +588,7 @@ sub analyze_entrez_genes {
     ## locus section because locus doesn't say the RefSeq status of the products
     foreach my $c (@{$result->{'comments'}}){
       $c = $c->[0] if(ref($c) eq 'ARRAY');
-      
+
       ## get RefSeq status
       if ($c->{'heading'} && $c->{'heading'} eq 'RefSeq Status') {
         my $refseq_status = $c->{'label'};
@@ -730,7 +730,7 @@ sub get_products {
   my $product       = shift;
   my $struct        = shift;
   my @product_acc   = $struct->get_list($product);
-  
+
   my ($fetcher, $base_name);
   if ($product eq 'transcript') {
     $fetcher    = create_fetcher ('nuccore');
