@@ -541,6 +541,21 @@ sub analyze_entrez_genes {
       }
     }
 
+    ## get the gene location (something like 1q21)
+    my $locus = "";
+    if ($result->{'location'}) {
+      $locus ||= $_->{'display-str'} foreach (@{ $result->{'location'} });
+    }
+    ## if we couldn't find it in location, we look for it in gene maploc
+    if (! $locus && $result->{'gene'}) {
+      $locus ||= $_->{'maploc'} foreach (@{ $result->{'gene'} });
+    }
+    if ($locus) {
+      $struct->add_gene(uid => $uid, locus => $locus);
+    } else {
+      log_it (1, "WARNING: couldn't find location for gene with UID='$uid'.");
+    }
+
     ## value is 'pseudo' for pseudo genes, should be 'protein-coding' otherwise
     if ($result->{'type'} eq 'pseudo') {
       log_it (3, "Update: gene with UID='$uid' is '". $result->{'type'} ."' gene. Marking as pseudo...");
@@ -913,7 +928,7 @@ sub create_csv {
   my $csv_file  = File::Spec->catfile ($save, 'data.csv');
   open (my $fh, ">", $csv_file) or die "Couldn't open file $csv_file for writing: $!";
 
-  $csv->print ($fh, ['gene symbol', 'gene UID', 'EnsEMBL ID', 'gene name', 'pseudo', 'transcript accession','protein accession', 'chromosome accession', 'chromosome start coordinates', 'chromosome stop coordinates', 'assembly'] );
+  $csv->print ($fh, ['gene symbol', 'gene UID', 'EnsEMBL ID', 'gene name', 'pseudo', 'transcript accession','protein accession', 'locus', 'chromosome accession', 'chromosome start coordinates', 'chromosome stop coordinates', 'assembly'] );
 
   my @uids = $struct->get_list('gene');
   foreach my $uid(@uids) {
@@ -929,6 +944,7 @@ sub create_csv {
                     $struct->get_info('gene', $uid, 'pseudo'),
                     $mRNA_acc,
                     $struct->get_info('transcript', $mRNA_acc, 'protein'),
+                    $struct->get_info('gene', $uid, 'locus'),
                     $struct->get_info('gene', $uid, 'ChrAccVer'),
                     $struct->get_info('gene', $uid, 'ChrStart'),
                     $struct->get_info('gene', $uid, 'ChrStop'),
