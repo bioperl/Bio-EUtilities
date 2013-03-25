@@ -1,19 +1,14 @@
-#
-# BioPerl module for Bio::Tools::EUtilities::EUtilDataI
-#
-# Please direct questions and support issues to <bioperl-l@bioperl.org>
-#
-# Cared for by Chris Fields <cjfields at bioperl dot org>
-#
-# Copyright Chris Fields
-#
-# You may distribute this module under the same terms as perl itself
-#
-# POD documentation - main docs before the code
+package Bio::Tools::EUtilities::EUtilDataI;
+use utf8;
+use strict;
+use warnings;
+use base qw(Bio::Root::RootI);
+use Text::Wrap qw(wrap);
 
-=head1 NAME
-
-Bio::Tools::EUtilities::EUtilDataI - eutil data object interface
+# ABSTRACT: EUtil data object interface.
+# AUTHOR:   Chris Fields <cjfields@bioperl.org>
+# OWNER:    2006-2013 Chris Fields
+# LICENSE:  Perl_5
 
 =head1 SYNOPSIS
 
@@ -65,26 +60,7 @@ corresponding to the data type simply return the set data or iterate through the
 data sets if the values are more complex. Data can alternatively be passed
 through the object constructor.
 
-=head1 AUTHOR
-
-Email cjfields at bioperl dot org
-
-=head1 APPENDIX
-
-The rest of the documentation details each of the
-object methods. Internal methods are usually
-preceded with a _
-
 =cut
-
-package Bio::Tools::EUtilities::EUtilDataI;
-# VERSION
-
-use strict;
-use warnings;
-use Text::Wrap qw(wrap);
-
-use base qw(Bio::Root::RootI);
 
 =head2 eutil
 

@@ -1,22 +1,13 @@
-#
-# BioPerl module for Bio::Tools::EUtilities::HistoryI
-#
-# Please direct questions and support issues to <bioperl-l@bioperl.org>
-#
-# Cared for by Chris Fields
-#
-# Copyright Chris Fields
-#
-# You may distribute this module under the same terms as perl itself
-#
-# POD documentation - main docs before the code
-#
-# Part of the EUtilities BioPerl package
+package Bio::Tools::EUtilities::HistoryI;
+use utf8;
+use strict;
+use warnings;
+use base qw(Bio::Tools::EUtilities::EUtilDataI);
 
-=head1 NAME
-
-Bio::Tools::EUtilities::HistoryI - simple extension of EUtilDataI interface
-class for classes which hold NCBI server history data
+# ABSTRACT: Simple extension of EUtilDataI interface class for classes which hold NCBI server history data.
+# AUTHOR:   Chris Fields <cjfields@bioperl.org>
+# OWNER:    2006-2013 Chris Fields
+# LICENSE:  Perl_5
 
 =head1 SYNOPSIS
 
@@ -48,27 +39,6 @@ history data for epost.  See also Bio::Tools::EUtilities::Query (esearch) and
 Bio::Tools::EUtilities::LinkSet (elink), which also implement HistoryI.
 
 =cut
-
-=head1 AUTHOR
-
-Email cjfields at bioperl dot org
-
-=head1 APPENDIX
-
-The rest of the documentation details each of the object methods. Internal
-methods are usually preceded with a _
-
-=cut
-
-# Let the code begin...
-
-package Bio::Tools::EUtilities::HistoryI;
-# VERSION
-
-use strict;
-use warnings;
-
-use base qw(Bio::Tools::EUtilities::EUtilDataI);
 
 =head2 history
 

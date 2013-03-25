@@ -1,23 +1,13 @@
-#
-# BioPerl module for Bio::Tools::EUtilities::Summary::ItemContainerI
-#
-# Please direct questions and support issues to <bioperl-l@bioperl.org>
-#
-# Cared for by Chris Fields
-#
-# Copyright Chris Fields
-#
-# You may distribute this module under the same terms as perl itself
-#
-# POD documentation - main docs before the code
-#
-# Part of the EUtilities BioPerl package
+package Bio::Tools::EUtilities::Summary::ItemContainerI;
+use utf8;
+use strict;
+use warnings;
+use base qw(Bio::Tools::EUtilities::EUtilDataI);
 
-=head1 NAME
-
-Bio::Tools::EUtilities::Summary::ItemContainerI - abtract interface methods
-for accessing Item information from any Item-containing class.  This pertains
-to either DocSums or to Items themselves (which can be layered)
+# ABSTRACT: Abtract interface methods for accessing Item information from any Item-containing class. This pertains to either DocSums or to Items themselves (which can be layered).
+# AUTHOR:   Chris Fields <cjfields@bioperl.org>
+# OWNER:    2006-2013 Chris Fields
+# LICENSE:  Perl_5
 
 =head1 SYNOPSIS
 
@@ -44,25 +34,7 @@ the basic methods to generically retrieve the next layer of Item data. For
 convenience classes may describe more specific methods, but they should be
 defined in terms of this interface and it's methods.
 
-=head1 AUTHOR Chris Fields
-
-Email cjfields at bioperl dot org
-
-=head1 APPENDIX
-
-The rest of the documentation details each of the
-object methods. Internal methods are usually
-preceded with a _
-
 =cut
-
-package Bio::Tools::EUtilities::Summary::ItemContainerI;
-# VERSION
-
-use strict;
-use warnings;
-
-use base qw(Bio::Tools::EUtilities::EUtilDataI);
 
 =head2 next_Item
 

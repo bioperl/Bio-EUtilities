@@ -1,19 +1,14 @@
-#
-# BioPerl module for Bio::Tools::EUtilities
-#
-# Please direct questions and support issues to <bioperl-l@bioperl.org>
-#
-# Cared for by Chris Fields
-#
-# Copyright Chris Fields
-#
-# You may distribute this module under the same terms as perl itself
-#
-# POD documentation - main docs before the code
+package Bio::Tools::EUtilities;
+use utf8;
+use strict;
+use warnings;
+use base qw(Bio::Root::IO Bio::Tools::EUtilities::EUtilDataI);
+use XML::Simple;
 
-=head1 NAME
-
-Bio::Tools::EUtilities - NCBI eutil XML parsers
+# ABSTRACT: NCBI eutil XML parsers.
+# AUTHOR:   Chris Fields <cjfields@bioperl.org>
+# OWNER:    2006-2013 Chris Fields
+# LICENSE:  Perl_5
 
 =head1 SYNOPSIS
 
@@ -117,28 +112,7 @@ This module is largely complete. However there are a few holes which will
 eventually be filled in. TranslationSets from esearch are not currently parsed,
 for instance.
 
-=head1 AUTHOR
-
-Email cjfields at bioperl dot org
-
-=head1 APPENDIX
-
-The rest of the documentation details each of the
-object methods. Internal methods are usually
-preceded with a _
-
 =cut
-
-# Let the code begin...
-
-package Bio::Tools::EUtilities;
-# VERSION
-
-use strict;
-use warnings;
-
-use base qw(Bio::Root::IO Bio::Tools::EUtilities::EUtilDataI);
-use XML::Simple;
 
 =head2 Constructor methods
 

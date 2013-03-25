@@ -1,22 +1,14 @@
-#
-# BioPerl module for Bio::Tools::EUtilities::Summary::DocSum
-#
-# Please direct questions and support issues to <bioperl-l@bioperl.org>
-#
-# Cared for by Chris Fields
-#
-# Copyright Chris Fields
-#
-# You may distribute this module under the same terms as perl itself
-#
-# POD documentation - main docs before the code
-#
-# Part of the EUtilities BioPerl package
+package Bio::Tools::EUtilities::Summary::DocSum;
+use utf8;
+use strict;
+use warnings;
+use base qw(Bio::Root::Root Bio::Tools::EUtilities::Summary::ItemContainerI);
+use Bio::Tools::EUtilities::Summary::Item;
 
-=head1 NAME
-
-Bio::Tools::EUtilities::Summary::DocSum - data object for document summary data
-from esummary
+# ABSTRACT: Data object for document summary data from esummary.
+# AUTHOR:   Chris Fields <cjfields@bioperl.org>
+# OWNER:    2006-2013 Chris Fields
+# LICENSE:  Perl_5
 
 =head1 SYNOPSIS
 
@@ -39,29 +31,7 @@ from esummary
 This is the basic class for Document Summary data from NCBI eUtils, returned
 from esummary.  This implements the simple ItemContainerI interface.
 
-=head1 AUTHOR Chris Fields
-
-Email cjfields at bioperl dot org
-
-=head1 APPENDIX
-
-The rest of the documentation details each of the
-object methods. Internal methods are usually
-preceded with a _
-
 =cut
-
-# Let the code begin...
-
-package Bio::Tools::EUtilities::Summary::DocSum;
-# VERSION
-
-
-use strict;
-use warnings;
-use base qw(Bio::Root::Root Bio::Tools::EUtilities::Summary::ItemContainerI);
-
-use Bio::Tools::EUtilities::Summary::Item;
 
 =head2 new
 

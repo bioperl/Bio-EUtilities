@@ -1,21 +1,14 @@
-#
-# BioPerl module for Bio::Tools::EUtilities::Link
-#
-# Please direct questions and support issues to <bioperl-l@bioperl.org>
-#
-# Cared for by Chris Fields
-#
-# Copyright Chris Fields
-#
-# You may distribute this module under the same terms as perl itself
-#
-# POD documentation - main docs before the code
-#
-# Part of the EUtilities BioPerl package
+package Bio::Tools::EUtilities::Link;
+use utf8;
+use strict;
+use warnings;
+use base qw(Bio::Tools::EUtilities Bio::Tools::EUtilities::EUtilDataI);
+use Bio::Tools::EUtilities::Link::LinkSet;
 
-=head1 NAME
-
-Bio::Tools::EUtilities::Link - general API for accessing data retrieved from elink queries
+# ABSTRACT: General API for accessing data retrieved from elink queries.
+# AUTHOR:   Chris Fields <cjfields@bioperl.org>
+# OWNER:    2006-2013 Chris Fields
+# LICENSE:  Perl_5
 
 =head1 SYNOPSIS
 
@@ -26,29 +19,8 @@ Bio::Tools::EUtilities::Link - general API for accessing data retrieved from eli
 Bio::Tools::EUtilities::Link is a loadable plugin for Bio::Tools::EUtilities
 that specifically handles NCBI elink-related data.
 
-=head1 AUTHOR
-
-Email cjfields at bioperl dot org
-
-=head1 APPENDIX
-
-The rest of the documentation details each of the
-object methods. Internal methods are usually
-preceded with a _
-
 =cut
 
-# Let the code begin...
-
-package Bio::Tools::EUtilities::Link;
-# VERSION
-
-use strict;
-use warnings;
-
-use base qw(Bio::Tools::EUtilities Bio::Tools::EUtilities::EUtilDataI);
-
-use Bio::Tools::EUtilities::Link::LinkSet;
 
 # private EUtilDataI method
 

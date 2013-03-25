@@ -1,21 +1,13 @@
-#
-# BioPerl module for Bio::Tools::EUtilities::Query::GlobalQuery
-#
-# Please direct questions and support issues to <bioperl-l@bioperl.org>
-#
-# Cared for by Chris Fields
-#
-# Copyright Chris Fields
-#
-# You may distribute this module under the same terms as perl itself
-#
-# POD documentation - main docs before the code
-#
-# Part of the EUtilities BioPerl package
+package Bio::Tools::EUtilities::Query::GlobalQuery;
+use utf8;
+use strict;
+use warnings;
+use base qw(Bio::Root::Root Bio::Tools::EUtilities::EUtilDataI);
 
-=head1 NAME
-
-Bio::Tools::EUtilities::Query::GlobalQuery - container class for egquery data
+# ABSTRACT: Container class for egquery data.
+# AUTHOR:   Chris Fields <cjfields@bioperl.org>
+# OWNER:    2006-2013 Chris Fields
+# LICENSE:  Perl_5
 
 =head1 SYNOPSIS
 
@@ -36,27 +28,7 @@ This is a simple container class for egquery data.  Currently this just contains
 various accessors for the data, such as get_database(), get_count(), etc. for
 each item in a global query.
 
-=head1 AUTHOR
-
-Email cjfields at bioperl dot org
-
-=head1 APPENDIX
-
-The rest of the documentation details each of the
-object methods. Internal methods are usually
-preceded with a _
-
 =cut
-
-# Let the code begin...
-
-package Bio::Tools::EUtilities::Query::GlobalQuery;
-# VERSION
-
-use strict;
-use warnings;
-
-use base qw(Bio::Root::Root Bio::Tools::EUtilities::EUtilDataI);
 
 sub new {
     my ($class, @args) = @_;

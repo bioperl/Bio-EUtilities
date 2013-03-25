@@ -1,21 +1,13 @@
-#
-# BioPerl module for Bio::Tools::EUtilities::Info::LinkInfo
-#
-# Please direct questions and support issues to <bioperl-l@bioperl.org>
-#
-# Cared for by Chris Fields
-#
-# Copyright Chris Fields
-#
-# You may distribute this module under the same terms as perl itself
-#
-# POD documentation - main docs before the code
-#
-# Part of the EUtilities BioPerl package
+package Bio::Tools::EUtilities::Info::LinkInfo;
+use utf8;
+use strict;
+use warnings;
+use base qw(Bio::Root::Root Bio::Tools::EUtilities::EUtilDataI);
 
-=head1 NAME
-
-Bio::Tools::EUtilities::Info::LinkInfo - class for storing einfo link data
+# ABSTRACT: Class for storing einfo link data.
+# AUTHOR:   Chris Fields <cjfields@bioperl.org>
+# OWNER:    2006-2013 Chris Fields
+# LICENSE:  Perl_5
 
 =head1 SYNOPSIS
 
@@ -40,26 +32,7 @@ For more information on einfo see:
 
    http://eutils.ncbi.nlm.nih.gov/entrez/query/static/einfo_help.html
 
-=head1 AUTHOR
-
-Email cjfields at bioperl dot org
-
-=head1 APPENDIX
-
-The rest of the documentation details each of the object methods. Internal
-methods are usually preceded with a _
-
 =cut
-
-# Let the code begin...
-
-package Bio::Tools::EUtilities::Info::LinkInfo;
-# VERSION
-
-
-use base qw(Bio::Root::Root Bio::Tools::EUtilities::EUtilDataI);
-use strict;
-use warnings;
 
 =head2 new
 

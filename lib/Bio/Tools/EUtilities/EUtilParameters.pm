@@ -1,20 +1,16 @@
-#
-# BioPerl module for Bio::Tools::EUtilities::EUtilParameters
-#
-# Please direct questions and support issues to <bioperl-l@bioperl.org>
-#
-# Cared for by Chris Fields <cjfields at bioperl dot org>
-#
-# Copyright Chris Fields
-#
-# You may distribute this module under the same terms as perl itself
-#
-# POD documentation - main docs before the code
+package Bio::Tools::EUtilities::EUtilParameters;
+use utf8;
+use strict;
+use warnings;
+use base qw(Bio::Root::Root Bio::ParameterBaseI);
+use URI;
+use HTTP::Request;
+use Bio::Root::IO;
 
-=head1 NAME
-
-Bio::Tools::EUtilities::EUtilParameters - Manipulation of NCBI eutil-based
-parameters for remote database requests.
+# ABSTRACT: Manipulation of NCBI eutil-based parameters for remote database requests.
+# AUTHOR:   Chris Fields <cjfields@bioperl.org>
+# OWNER:    2006-2013 Chris Fields
+# LICENSE:  Perl_5
 
 =head1 SYNOPSIS
 
@@ -58,30 +54,7 @@ set_parameters() or reset_parameters():
 At this point minimal checking is done for potential errors in parameter
 passing, though these should be easily added in the future when necessary.
 
-=head1 AUTHOR
-
-Email cjfields at bioperl dot org
-
-=head1 APPENDIX
-
-The rest of the documentation details each of the
-object methods. Internal methods are usually
-preceded with a _
-
 =cut
-
-# Let the code begin...
-
-package Bio::Tools::EUtilities::EUtilParameters;
-# VERSION
-
-use strict;
-use warnings;
-
-use base qw(Bio::Root::Root Bio::ParameterBaseI);
-use URI;
-use HTTP::Request;
-use Bio::Root::IO;
 
 # eutils only has one hostbase URL
 
