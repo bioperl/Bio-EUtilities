@@ -447,7 +447,7 @@ sub analyze_entrez_genes {
 #      print Dumper ($result);
 #      exit;
 
-    my $uid = $result->{'track-info'}->[0]->{'geneid'};
+    my $uid = find_in_entrezgene ($result, ['track-info', 'geneid']);
     if ($analyzed_genes{$uid}) {
       log_it (9, "DEBUG: skipping analysis of gene with UID='$uid' since it's already been done.");
       next SEQ;
@@ -464,41 +464,26 @@ sub analyze_entrez_genes {
         $symbol = $pp->{'text'} if ($pp->{'label'} && $pp->{'label'} eq 'Official Symbol');
       }
     }
-    ## if couldn't find the name and symbol on 'properties', try 'gene'
-    if (!$symbol || !$name) {
-      foreach my $g (@{$result->{'gene'}}){
-        $g      = $g->[0] if(ref($g) eq 'ARRAY');
-        $name   = $g->{'desc'}  if (!$name   && $g->{'desc'});
-        $symbol = $g->{'locus'} if (!$symbol && $g->{'locus'});
-      }
-    }
-    ## if still couldn't find the name and symbol try 'rna' and then 'prot'
-    if (!$name) {
-      foreach my $r (@{$result->{'rna'}}){
-        $r    = $r->[0] if(ref($r) eq 'ARRAY');
-        $name = $r->{'ext'}->[0]->{'name'} if (!$name && $r->{'ext'}->[0]->{'name'});
-      }
-    }
-    if (!$name) {
-      foreach my $p (@{$result->{'prot'}}){
-        $p    = $p->[0] if(ref($p) eq 'ARRAY');
-        $name = $p->{'name'}->[0] if (!$name && $p->{'name'}->[0]);
-      }
-    }
 
-    my ($ensembl);
-    foreach my $gdb (@{$result->{'gene'}->[0]->{'db'}}){
-      $gdb = $gdb->[0] if(ref($gdb) eq 'ARRAY');
-      next unless ($gdb->{'db'} && $gdb->{'db'} eq 'Ensembl');
-      $ensembl = $gdb->{'tag'}->[0]->{'str'};
-      last;
-    }
+    ## if couldn't find the name and symbol on 'properties', try 'gene'
+    ## if still couldn't find the name, try 'rna' and then 'prot'
+    $symbol //= find_in_entrezgene ($result, ['gene', 'locus']);
+    $name   //= find_in_entrezgene (
+      $result,
+      ['gene', 'desc'],
+      ['rna', 'ext', 'name'],
+      ['prot', 'name']
+    );
+
+
+    my $ensembl = find_in_entrezgene ($result, ['gene', 'db', 'Ensembl', 'tag', 'str']);
+
     ## values for the gene-status (different from RefSeq status)
     ## live           good??
     ## secondary      synonym with merged
     ## discontinued   'deleted', still index and display to public
     ## newentry-      for GeneRif submission
-    my $status = $result->{'track-info'}->[0]->{'status'};
+    my $status = find_in_entrezgene ($result, ['track-info', 'status']);
 
     given ($status) {
       when ('discontinued') {
@@ -541,15 +526,13 @@ sub analyze_entrez_genes {
       }
     }
 
-    ## get the gene location (something like 1q21)
-    my $locus = "";
-    if ($result->{'location'}) {
-      $locus ||= $_->{'display-str'} foreach (@{ $result->{'location'} });
-    }
-    ## if we couldn't find it in location, we look for it in gene maploc
-    if (! $locus && $result->{'gene'}) {
-      $locus ||= $_->{'maploc'} foreach (@{ $result->{'gene'} });
-    }
+    ## get the gene location (something like 1q21). And if we can't find
+    ## it in location, we look for it in gene maploc
+    my $locus = find_in_entrezgene (
+      $result,
+      ['location', 'display-str'],
+      ['gene', 'maploc']
+    );
     if ($locus) {
       $struct->add_gene(uid => $uid, locus => $locus);
     } else {
@@ -557,9 +540,9 @@ sub analyze_entrez_genes {
     }
 
     ## get the species names
-    my $species = find_in_entrezgene ($parser, 'source', 'org', 'taxname');
+    my $species = find_in_entrezgene ($result, ['source', 'org', 'taxname']);
     if ($species) {
-      $struct->add_gene(uid => $uid, species => $locus);
+      $struct->add_gene(uid => $uid, species => $species);
     } else {
       log_it (1, "WARNING: couldn't find species for gene with UID='$uid'.");
     }
@@ -583,9 +566,9 @@ sub analyze_entrez_genes {
       next unless ($l->{'heading'} && $l->{'heading'} =~ m/$assembly_regex/i);
       my $assembly  = $l->{'heading'};
       my $ChrAccVer = $l->{'accession'};
-      my $ChrStart  = $l->{'seqs'}->[0]->{'int'}->[0]->{'from'};
-      my $ChrStop   = $l->{'seqs'}->[0]->{'int'}->[0]->{'to'};
-      my $ChrStrand = $l->{'seqs'}->[0]->{'int'}->[0]->{'strand'};
+      my $ChrStart  = find_in_entrezgene ($l, ['seqs', 'int', 'from'  ]);
+      my $ChrStop   = find_in_entrezgene ($l, ['seqs', 'int', 'to'    ]);
+      my $ChrStrand = find_in_entrezgene ($l, ['seqs', 'int', 'strand']);
       if ($ChrStrand eq 'plus') {
         $ChrStrand   = 1;
         $ChrStart   += 1 - $upstream;
@@ -846,32 +829,33 @@ sub find_in_entrezgene {
   ## Bio::ASN1::Entrezgene, causing us to make a bunch of checks.
   ## This will return undef if the path does not exist, or the value
   ## found. Only hash keys need to be specified, if an array is found
-  ## it will look into all of its elements.
+  ## it will look into all of its elements. Second argument onwards
+  ## must be ARRAY refs to the hash keys. They will be looked in order
+  ## example:
+  ## find_in_entrezgene ($seq, ['location', 'display-str'], ['gene', 'maploc']);
+
   my $seq = shift;
   my $val;
-  if (ref($seq) eq 'ARRAY') {
-    foreach (@{$seq}) {
-      $val = find_in_entrezgene ($_, @_);
-      ## value may be false, but will be undefined if just not found
-      last if defined $val;
-    }
-  } elsif (ref($seq) eq 'HASH') {
-    my $key = shift;
-    if (exists $seq->{$key}) {
-      $val = find_in_entrezgene ($seq->{$key}, @_);
+  foreach my $keys (@_) {
+    if (ref($seq) eq 'ARRAY') {
+      foreach (@{$seq}) {
+        $val = find_in_entrezgene ($_, $keys);
+        ## value may be false, but will be undefined if just not found
+        last if defined $val;
+      }
+    } elsif (ref($seq) eq 'HASH') {
+      my $key = shift (@{$keys});
+      $val = find_in_entrezgene ($seq->{$key}, $keys) if (exists $seq->{$key});
+    } elsif (!ref($seq)) {
+      ## not a reference, must be the value we are looking for
+      $val = $seq;
     } else {
-      $val = undef;
+      die "error when transversing entrezgene structure.\n";
     }
-  } elsif (!ref($seq)) {
-    ## then it's the value we are looking for
-    $val = $seq;
-  } else {
-    die "error when transversing entrezgene structure.\n";
+    last if defined $val;
   }
   return $val;
 }
-
-
 
 ## Removes repeated elements from an array. Does not respect original order
 sub clean_array {
