@@ -556,6 +556,14 @@ sub analyze_entrez_genes {
       log_it (1, "WARNING: couldn't find location for gene with UID='$uid'.");
     }
 
+    ## get the species names
+    my $species = find_in_entrezgene ($parser, 'source', 'org', 'taxname');
+    if ($species) {
+      $struct->add_gene(uid => $uid, species => $locus);
+    } else {
+      log_it (1, "WARNING: couldn't find species for gene with UID='$uid'.");
+    }
+
     ## value is 'pseudo' for pseudo genes, should be 'protein-coding' otherwise
     if ($result->{'type'} eq 'pseudo') {
       log_it (3, "Update: gene with UID='$uid' is '". $result->{'type'} ."' gene. Marking as pseudo...");
@@ -833,6 +841,38 @@ sub log_it {
   }
 }
 
+sub find_in_entrezgene {
+  ## we have to look into the mess of a structure returned by
+  ## Bio::ASN1::Entrezgene, causing us to make a bunch of checks.
+  ## This will return undef if the path does not exist, or the value
+  ## found. Only hash keys need to be specified, if an array is found
+  ## it will look into all of its elements.
+  my $seq = shift;
+  my $val;
+  if (ref($seq) eq 'ARRAY') {
+    foreach (@{$seq}) {
+      $val = find_in_entrezgene ($_, @_);
+      ## value may be false, but will be undefined if just not found
+      last if defined $val;
+    }
+  } elsif (ref($seq) eq 'HASH') {
+    my $key = shift;
+    if (exists $seq->{$key}) {
+      $val = find_in_entrezgene ($seq->{$key}, @_);
+    } else {
+      $val = undef;
+    }
+  } elsif (!ref($seq)) {
+    ## then it's the value we are looking for
+    $val = $seq;
+  } else {
+    die "error when transversing entrezgene structure.\n";
+  }
+  return $val;
+}
+
+
+
 ## Removes repeated elements from an array. Does not respect original order
 sub clean_array {
   my %hash;
@@ -928,7 +968,7 @@ sub create_csv {
   my $csv_file  = File::Spec->catfile ($save, 'data.csv');
   open (my $fh, ">", $csv_file) or die "Couldn't open file $csv_file for writing: $!";
 
-  $csv->print ($fh, ['gene symbol', 'gene UID', 'EnsEMBL ID', 'gene name', 'pseudo', 'transcript accession','protein accession', 'locus', 'chromosome accession', 'chromosome start coordinates', 'chromosome stop coordinates', 'assembly'] );
+  $csv->print ($fh, ['gene symbol', 'species', 'gene UID', 'EnsEMBL ID', 'gene name', 'pseudo', 'transcript accession','protein accession', 'locus', 'chromosome accession', 'chromosome start coordinates', 'chromosome stop coordinates', 'assembly'] );
 
   my @uids = $struct->get_list('gene');
   foreach my $uid(@uids) {
@@ -938,6 +978,7 @@ sub create_csv {
     foreach my $mRNA_acc (@mRNA_acc) {
       push(@lines, [
                     $struct->get_info('gene', $uid, 'symbol'),
+                    $struct->get_info('gene', $uid, 'species'),
                     $uid,
                     $struct->get_info('gene', $uid, 'ensembl'),
                     $struct->get_info('gene', $uid, 'name'),
