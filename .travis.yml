@@ -9,11 +9,12 @@ perl:
 env: PERL_CPANM_OPT="--notest --force --skip-satisfied"
 
 install:
+    #- "cpanm Dist::Zilla::PluginBundle::BioPerl | tail -n 1"
+    - "cpanm XML::Simple LWP::UserAgent | tail -n 1"
     - "cpanm Bio::Root::Root | tail -n 1"
-    - "perl ./Build.PL --accept"
 
 script:
-    - "./Build test"
+    - "prove -lr t"
 
 notifications:
   email: false
