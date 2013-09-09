@@ -1,6 +1,8 @@
 Revision history for Bio-EUtilities
 
 {{$NEXT}}
+
+1.73      2013-09-08 22:17:18 America/Chicago
   * LWP::UserAgent is required for Bio::DB::EUtilities, now added
   * New script for download of all sequences from Entrez Gene queries
 
