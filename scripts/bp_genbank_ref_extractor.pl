@@ -79,6 +79,15 @@ This extra base pairs will only affect the gene sequence, not the transcript or 
 =cut
 my $downstream    = 0;
 
+=item B<--email>
+
+A valid email used to connect to the NCBI servers. This may be used by
+NCBI to contact users in case of problems and before blocking access in
+case of heavy usage.
+
+=cut
+my $email = "";
+
 =item B<--format>
 
 Specifies the format that the sequences will be saved. Defaults to I<genbank> format.
@@ -319,6 +328,7 @@ GetOptions(
             'assembly:s'          => \$assembly_regex,
             'debug'               => \$debug,
             'down|downstream=i'   => \$downstream,
+            'email=s'             => \$email,
             'format=s'            => \$format,
             'genes:s'             => \&genes_option_parsing,
             'limit=i'             => \$limit,
@@ -396,6 +406,7 @@ sub gb_search {
                                             -db      => 'gene',
                                             -term    => $_[0],
                                             -retmax  => $limit,
+                                            -email   => $email,
                                             );
   log_it (3, "Entrez gene: query $_[0] translated into '" . $searcher->get_query_translation . "'");
   log_it (2, "Entrez gene: found " . $searcher->get_count . " UIDS");
@@ -423,6 +434,7 @@ sub analyze_entrez_genes {
                                           -id      => $uid_ref,
                                           -retmode => 'text',
                                           -rettype => 'asn1',
+                                          -email   => $email,
                                          );
   my $response = $fetcher->get_Response->content;
   open(my $seq_fh, "<", \$response) or die "Could not open sequences string for reading: $!";
@@ -603,6 +615,9 @@ sub analyze_entrez_genes {
       }
 
       ## the rest of the block only makes sense if it's not a pseudo gene
+      ## XXX Also, some genes enconde fancy types of RNA without an actual
+      ## protein product which we are not skipping. should we check if the
+      ## gene type has RNA somewhere on its name?
       if ($struct->get_info('gene', $uid, 'pseudo') ) {
         log_it (9, "DEBUG: finished analyzing gene with UID='$uid' earlier since it's pseudo gene " . by_caller_and_location('here') );
         next SEQ;
@@ -659,7 +674,8 @@ sub analyze_entrez_genes {
         }
       }
     }
-    unless (scalar($struct->get_product_list('transcript', $uid)) >= 1 && scalar($struct->get_product_list('protein', $uid)) >= 1) {
+    unless (scalar($struct->get_product_list('transcript', $uid)) >= 1 &&
+            scalar($struct->get_product_list('protein', $uid)) >= 1) {
       log_it (1, "WARNING: non-pseudo gene with UID='$uid' returned no protein and transcript.");
     }
 =item *
@@ -687,6 +703,7 @@ sub create_fetcher {
                                           -db       => $searched,
                                           -retmode  => 'text',
                                           -rettype  => $rettype,
+                                          -email    => $email,
                                           );
   return $fetcher;
 }
