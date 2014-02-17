@@ -559,7 +559,9 @@ sub analyze_entrez_genes {
       log_it (1, "WARNING: couldn't find species for gene with UID='$uid'.");
     }
 
-    ## value is 'pseudo' for pseudo genes, should be 'protein-coding' otherwise
+    ## Type can be 'pseudo' or 'protein-coding'. That;s the only type of things
+    ## we handle. There are also, 'ncRNA' for non coding RNA, and even 'other'
+    ## for things such as regions
     if ($result->{'type'} eq 'pseudo') {
       log_it (3, "Update: gene with UID='$uid' is '". $result->{'type'} ."' gene. Marking as pseudo...");
       $struct->add_gene(uid => $uid, pseudo  => 1);
@@ -568,9 +570,13 @@ sub analyze_entrez_genes {
         $struct->remove_gene($uid);
         next SEQ;
       }
-    } else {
+    } elsif ($result->{'type'} eq 'protein-coding') {
       log_it (3, "Update: gene with UID='$uid' is '". $result->{'type'} ."' gene. Marking as protein-coding...");
       $struct->add_gene(uid => $uid, pseudo  => 0);
+    } else {
+      log_it (1, "WARNING: gene with UID='$uid' is of type '" . $result->{'type'} . "' . Skipping...");
+      $struct->remove_gene($uid);
+      next SEQ;
     }
 
     foreach my $l (@{$result->{'locus'}}){
