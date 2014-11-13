@@ -17,7 +17,7 @@ install:
 
 script:
     #- "prove -lr t"
-    - PERL5OPT=-MDevel::Cover=+ignore,prove,-coverage,subroutine prove -lr t
+    - PERL5OPT=-MDevel::Cover=+ignore,prove,-coverage,statement,subroutine prove -lr t
     - cover
 
 after_success:
