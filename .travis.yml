@@ -16,12 +16,8 @@ install:
     - cpanm --quiet --notest Devel::Cover::Report::Coveralls
 
 script:
-    #- "prove -lr t"
     - PERL5OPT=-MDevel::Cover=+ignore,prove,-coverage,all prove -lr t
     - cover -report coveralls
-
-#after_success:
-#    - cover -report coveralls
 
 notifications:
   email: false
