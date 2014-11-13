@@ -17,11 +17,11 @@ install:
 
 script:
     #- "prove -lr t"
-    - PERL5OPT=-MDevel::Cover=+ignore,prove,-coverage,statement,subroutine prove -lr t
-    - cover
-
-after_success:
+    - PERL5OPT=-MDevel::Cover=+ignore,prove,-coverage,all prove -lr t
     - cover -report coveralls
+
+#after_success:
+#    - cover -report coveralls
 
 notifications:
   email: false
