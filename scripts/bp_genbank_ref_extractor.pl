@@ -105,13 +105,12 @@ nomenclature).
 =cut
 my $genes         = '';
 sub genes_option_parsing {
-  given ($_[1]) {
-    when (/^(u)?id$/i)    { $genes = 'uid'; }
-    when (/^sym(bol)?$/i) { $genes = 'symbol'; }
-    when (/^name$/i)      { $genes = 'name'; }
-    ## default is set here, when value is empty
-    when ('')             { $genes = 'uid' }
-    default               { die "Invalid identifier '$_[1]' for gene files."; }
+  for ($_[1]) {
+    if    (/^(u)?id$/i)    { $genes = 'uid'; }
+    elsif (/^sym(bol)?$/i) { $genes = 'symbol'; }
+    elsif (/^name$/i)      { $genes = 'name'; }
+    elsif ($_ eq "")       { $genes = 'uid' }
+    else { die "Invalid identifier '$_[1]' for gene files."; }
   }
 }
 
@@ -149,14 +148,14 @@ to encode more than one protein or different proteins to have the same descripti
 =cut
 my $proteins      = '';
 sub proteins_option_parsing {
-  given ($_[1]) {
-    when (/^acc(ession)?$/i)      { $proteins = 'accession'; }
-    when (/^desc(ription)?$/i)    { $proteins = 'description'; }
-    when (/^gene$/i)              { $proteins = 'gene'; }
-    when (/^(transcript|mrna)$/i) { $proteins = 'transcript'; }
+  for ($_[1]) {
+    if    (/^acc(ession)?$/i)      { $proteins = 'accession'; }
+    elsif (/^desc(ription)?$/i)    { $proteins = 'description'; }
+    elsif (/^gene$/i)              { $proteins = 'gene'; }
+    elsif (/^(transcript|mrna)$/i) { $proteins = 'transcript'; }
     ## default is set here, when value is empty
-    when ('')                     { $proteins = 'accession' }
-    default                       { die "Invalid identifier '$_[1]' for protein files."; }
+    elsif ($_ eq '')               { $proteins = 'accession' }
+    else { die "Invalid identifier '$_[1]' for protein files."; }
   }
 }
 
@@ -189,10 +188,10 @@ Saving the data structure as a CSV file, requires the installation of the Text::
 =cut
 my $save_data     = '';
 sub save_data_option_parsing {
-  given ($_[1]) {
-    when (/^csv$/i) { $save_data = 'csv'; require Text::CSV; }
-    when ('')       { $save_data = 'csv'; require Text::CSV; } ## Do nothing. If not set, use default
-    default         { die "Specified format to save data '$save_data' is not valid."; }
+  for ($_[1]) {
+    if (/^csv$/i)     { $save_data = 'csv'; require Text::CSV; }
+    elsif ($_ eq '')  { $save_data = 'csv'; require Text::CSV; } ## Do nothing. If not set, use default
+    else { die "Specified format to save data '$save_data' is not valid."; }
   }
 }
 
@@ -209,14 +208,13 @@ transcripts will create problems if using 'protein'.
 =cut
 my $transcripts   = '';
 sub transcripts_option_parsing {
-  given ($_[1]) {
-    when (/^acc(ession)?$/i)    { $transcripts = 'accession'; }
-    when (/^desc(ription)?$/i)  { $transcripts = 'description'; }
-    when (/^gene$/i)            { $transcripts = 'gene'; }
-    when (/^protein$/i)         { $transcripts = 'protein'; }
-    ## default is set here, when value is empty
-    when ('')                   { $transcripts = 'accession' }
-    default                     { die "Invalid identifier '$_[1]' for transcript files."; }
+  for ($_[1]) {
+    if    (/^acc(ession)?$/i)    { $transcripts = 'accession'; }
+    elsif (/^desc(ription)?$/i)  { $transcripts = 'description'; }
+    elsif (/^gene$/i)            { $transcripts = 'gene'; }
+    elsif (/^protein$/i)         { $transcripts = 'protein'; }
+    elsif ($_ eq '')             { $transcripts = 'accession' }
+    else { die "Invalid identifier '$_[1]' for transcript files."; }
   }
 }
 
@@ -497,45 +495,41 @@ sub analyze_entrez_genes {
     ## newentry-      for GeneRif submission
     my $status = find_in_entrezgene ($result, ['track-info', 'status']);
 
-    given ($status) {
-      when ('discontinued') {
-        log_it (3, "Discontinued gene: UID='$uid', symbol='$symbol', name='$name'. Forgetting about it...");
-        next SEQ;
+    if ($status eq 'discontinued') {
+      log_it (3, "Discontinued gene: UID='$uid', symbol='$symbol', name='$name'. Forgetting about it...");
+      next SEQ;
+    } elsif ($status eq 'secondary') {
+      ## recursivity! UUUUUUUUUU!
+      log_it (3, "Secondary gene: UID='$uid', symbol='$symbol', name='$name'. Attempting to find its current UID...");
+      my $current_id;
+      foreach my $c (@{$result->{'track-info'}->[0]->{'current-id'}}) {
+        next unless $c->{'db'} eq 'GeneID';
+        $current_id = $c->{'tag'}->[0]->{'id'};
+        next unless $current_id;
+        log_it (3, "Update: found current UID '$current_id' of secondary gene with UID='$uid'");
+        analyze_entrez_genes ($struct, [$current_id]);
       }
-      when ('secondary') {
-        ## recursivity! UUUUUUUUUU!
-        log_it (3, "Secondary gene: UID='$uid', symbol='$symbol', name='$name'. Attempting to find its current UID...");
-        my $current_id;
-        foreach my $c (@{$result->{'track-info'}->[0]->{'current-id'}}) {
-          next unless $c->{'db'} eq 'GeneID';
-          $current_id = $c->{'tag'}->[0]->{'id'};
-          next unless $current_id;
-          log_it (3, "Update: found current UID '$current_id' of secondary gene with UID='$uid'");
-          analyze_entrez_genes ($struct, [$current_id]);
-        }
-        log_it (3, "Update: could not find current UID of secondary gene with UID='$uid'") unless $current_id;
-        next SEQ;
+      log_it (3, "Update: could not find current UID of secondary gene with UID='$uid'") unless $current_id;
+      next SEQ;
+    } else {
+      if (!$status) {
+        log_it (1, "WARNING: couldn't find gene status for gene with UID='$uid'. Assuming value of 'live'");
+        $status = 'live-assumed';
       }
-      default {
-        if (!$status) {
-          log_it (1, "WARNING: couldn't find gene status for gene with UID='$uid'. Assuming value of 'live'");
-          $status = 'live-assumed';
-        }
-        my @extra_arguments;
-        my $ng_message = "New gene: UID='$uid', gene status='$status', symbol='$symbol', name='$name'";
-        if ($ensembl) {
-          $ng_message = $ng_message . ", EnsEMBL ID='$ensembl'";
-          push (@extra_arguments, ensembl => $ensembl);
-        }
-        log_it (3, "$ng_message");
-        $struct->add_gene(
-                          uid     => $uid,
-                          status  => $status,
-                          name    => $name,
-                          symbol  => $symbol,
-                          @extra_arguments,
-                          );
+      my @extra_arguments;
+      my $ng_message = "New gene: UID='$uid', gene status='$status', symbol='$symbol', name='$name'";
+      if ($ensembl) {
+        $ng_message = $ng_message . ", EnsEMBL ID='$ensembl'";
+        push (@extra_arguments, ensembl => $ensembl);
       }
+      log_it (3, "$ng_message");
+      $struct->add_gene(
+                        uid     => $uid,
+                        status  => $status,
+                        name    => $name,
+                        symbol  => $symbol,
+                        @extra_arguments,
+                        );
     }
 
     ## get the gene location (something like 1q21). And if we can't find
@@ -699,11 +693,13 @@ RefSeq maintainers L<http://www.ncbi.nlm.nih.gov/RefSeq/update.cgi>.
 sub create_fetcher {
   my $searched  = shift;
   my $rettype;
-  given ($format) {
-    when ('genbank') {$rettype = 'gb';}
-    when ('fasta')   {$rettype = 'fasta';}
-    default          {$rettype = 'native'; log_it (1, "WARNING: couldn't convert format '$format' to rettype. Using native as default."); }
+  if    ($format eq 'genbank') {$rettype = 'gb';}
+  elsif ($format eq 'fasta')   {$rettype = 'fasta';}
+  else {
+    $rettype = 'native';
+    log_it (1, "WARNING: couldn't convert format '$format' to rettype. Using native as default.");
   }
+
   my $fetcher = Bio::DB::EUtilities->new(
                                           -eutil    => 'efetch',
                                           -db       => $searched,
@@ -720,11 +716,11 @@ sub get_filehandle {
   my $name_key    = shift;
   my $struct      = shift;
   my $base_dir;
-  given ($type) {
-    when ('gene')       { $base_dir = $gene_dir; }
-    when ('transcript') { $base_dir = $mrna_dir; }
-    when ('protein')    { $base_dir = $prot_dir; }
-    default { die "Found a bug. Unknow type provided '$type' to generate filename ". by_caller_and_location('before') ." Please report."; }
+  if    ($type eq 'gene')       { $base_dir = $gene_dir; }
+  elsif ($type eq 'transcript') { $base_dir = $mrna_dir; }
+  elsif ($type eq 'protein')    { $base_dir = $prot_dir; }
+  else {
+    die "Found a bug. Unknow type provided '$type' to generate filename ". by_caller_and_location('before') ." Please report.";
   }
   my $filename = fix_filename ( $struct->get_info($type, $product_key, $name_key) );
   my $filepath = File::Spec->catfile ($base_dir, $filename . file_extension_for($format));
@@ -944,15 +940,15 @@ sub file_extension_for {
   ## XXX there must be a more elegant to handle the formats on this scripts
 
   ## to update this list, look in the _guess_format method, inside SeqIO.pm of bioperl
-  given ($_[0]) {
-    when (/embl/i)       {return '.embl';}
-    when (/entrezgene/i) {return '.asn';}
-    when (/fasta/i)      {return '.fasta';} # fasta|fast|fas|seq|fa|fsa|nt|aa|fna|faa
-    when (/fastq/i)      {return '.fastq';}
-    when (/gcg/i)        {return '.gcg';}
-    when (/genbank/i)    {return '.gb';} # gb|gbank|genbank|gbk|gbs
-    when (/swiss/i)      {return '.swiss';} # swiss|sp
-    default {
+  for ($_[0]) {
+    if    (/embl/i)       {return '.embl';}
+    elsif (/entrezgene/i) {return '.asn';}
+    elsif (/fasta/i)      {return '.fasta';} # fasta|fast|fas|seq|fa|fsa|nt|aa|fna|faa
+    elsif (/fastq/i)      {return '.fastq';}
+    elsif (/gcg/i)        {return '.gcg';}
+    elsif (/genbank/i)    {return '.gb';} # gb|gbank|genbank|gbk|gbs
+    elsif (/swiss/i)      {return '.swiss';} # swiss|sp
+    else {
       log_it (9, "DEBUG: couldn't find the right extension for the requested format. Using '.seq' as default.");
       return ".seq";
     }
@@ -960,9 +956,7 @@ sub file_extension_for {
 }
 
 sub save_structure {
-  given ($save_data) {
-    when ('csv') { create_csv($_[0]); }
-  }
+  if ($save_data eq 'csv') { create_csv($_[0]); }
 }
 
 sub create_csv {
@@ -1138,11 +1132,9 @@ sub get_list {
 sub get_product_list {
   my $self    = shift;
   my $product = shift;
-  given ( scalar(@_) ) {
-    when ([1]) { return @{$self->{'gene'}->{$_[0]}->{$product}}; }
-    when ([0]) { return $self->get_list($product); }
-    default    { return map { $self->get_product_list($product, $_) } @_; }
-  }
+  if    (@_ == 1) { return @{$self->{'gene'}->{$_[0]}->{$product}}; }
+  elsif (@_ == 0) { return $self->get_list($product); }
+  else            { return map { $self->get_product_list($product, $_) } @_; }
 }
 
 ## this =back closes the last point on the NOTES on usage section
