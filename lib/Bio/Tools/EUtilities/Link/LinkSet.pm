@@ -1,4 +1,5 @@
 package Bio::Tools::EUtilities::Link::LinkSet;
+
 use utf8;
 use strict;
 use warnings;

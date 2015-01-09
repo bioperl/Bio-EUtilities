@@ -1,4 +1,5 @@
 package Bio::Tools::EUtilities::EUtilDataI;
+
 use utf8;
 use strict;
 use warnings;

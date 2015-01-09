@@ -1,4 +1,5 @@
 package Bio::Tools::EUtilities::Link::UrlLink;
+
 use utf8;
 use base qw(Bio::Root::Root Bio::Tools::EUtilities::EUtilDataI);
 

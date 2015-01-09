@@ -1,4 +1,5 @@
 package Bio::DB::EUtilities;
+
 use utf8;
 use strict;
 use warnings;

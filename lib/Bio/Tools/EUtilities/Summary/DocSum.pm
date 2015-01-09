@@ -1,4 +1,5 @@
 package Bio::Tools::EUtilities::Summary::DocSum;
+
 use utf8;
 use strict;
 use warnings;
