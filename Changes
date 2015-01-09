@@ -3,6 +3,8 @@ Revision history for Bio-EUtilities
 {{$NEXT}}
   * Remove usage of 'given' and 'when' which have been downgraded to
     experimental on perl 5.18.
+  * Fixed released tarball so it installs its programs `bp_einfo` and
+    `bp_genbank_ref_extractor`
 
 1.73      2013-09-08 22:17:18 America/Chicago
   * LWP::UserAgent is required for Bio::DB::EUtilities, now added
