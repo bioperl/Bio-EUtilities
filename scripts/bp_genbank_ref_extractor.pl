@@ -1,5 +1,6 @@
 #!/usr/bin/perl
-## Copyright (C) 2011 Carnë Draug <carandraug+dev@gmail.com>
+use utf8;
+## Copyright (C) 2011-2015 Carnë Draug <carandraug+dev@gmail.com>
 ##
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -24,9 +25,11 @@ use Bio::SeqIO;                 # Handler for SeqIO Formats
 use Bio::DB::EUtilities;        # Retrieve entries from Entrez
 use Bio::Root::Version;         # Get global bioperl-live version number
 
-=head1 NAME
-
-bp_genbank_ref_extractor - retrieves all related sequences for a list of searches on Entrez gene
+# PODNAME:  bp_genbank_ref_extractor
+# ABSTRACT: Retrieves all related sequences for a list of searches on Entrez gene
+# AUTHOR:   Carnë Draug <carandraug+dev@gmail.com>
+# OWNER:    2011-2015 Carnë Draug
+# LICENSE:  GPL_3
 
 =head1 SYNOPSIS
 
@@ -281,10 +284,7 @@ and save the results in a CSV file
 
 =back
 
-=head1 BUGS
-
-If you find any bug, or have a feature request, please report these at L<https://redmine.open-bio.org/projects/bioperl> or
-e-mail L<mailto:bioperl-l@lists.open-bio.org>
+=head1 KNOWN BUGS
 
 =over
 

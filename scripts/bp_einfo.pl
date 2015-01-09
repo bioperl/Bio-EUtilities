@@ -3,11 +3,11 @@
 use strict;
 use warnings;
 
-=head1 NAME
-
-bp_einfo.pl - query einfo to find all available databases or information about a
-            specific database (field information or links to other NCBI
-            databases)
+# PODNAME:  bp_einfo
+# ABSTRACT: Query einfo to find all available databases or information about a specific database (field information or links to other NCBI databases).
+# AUTHOR:   Chris Fields <cjfields@bioperl.org>
+# OWNER:    2009-2012 Chris Fields
+# LICENSE:  Perl_5
 
 =head1 SYNOPSIS
 
@@ -50,10 +50,6 @@ databases are printed instead.
 If either link names or field codes (or both) are specified, nothing else is
 printed out (only the info requested).  You can specify as many fields and/or
 links as you want by using multiple -f/-l E<lt>ARGE<gt> on the command line.
-
-=head1 AUTHOR - Chris Fields
-
-Chris Fields cjfields at bioperl dot org
 
 =cut
 
