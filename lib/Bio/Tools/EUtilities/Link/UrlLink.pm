@@ -80,7 +80,7 @@ sub get_url {
     my $self = shift;
     # fix Entrz LinkOut URLS without the full URL
     if ($self->{'_url'} && $self->{'_url'} =~ m{^/}) {
-        $self->{'_url'} = 'http://www.ncbi.nih.gov'.$self->{'_url'};
+        $self->{'_url'} = 'https://www.ncbi.nih.gov'.$self->{'_url'};
     }
     return $self->{'_url'};
 }

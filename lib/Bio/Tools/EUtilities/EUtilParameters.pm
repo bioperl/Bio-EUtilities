@@ -427,7 +427,7 @@ sub get_parameters {
  Usage   : $string = $pobj->to_string;
  Function: Returns string (URL only in this case)
  Returns : String (URL only for now)
- Args    : [optional] 'all'; build URI::http using all parameters
+ Args    : [optional] 'all'; build URI::https using all parameters
            Default : Builds based on allowed parameters (presence of history data
            or eutil type in %MODE).
  Note    : Changes state of object.  Absolute string
@@ -604,7 +604,7 @@ sub id_file {
 =cut
 
 {
-    my $HOSTBASE = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/';
+    my $HOSTBASE = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/';
 
     sub url_base_address {
         my ($self, $address) = @_;
