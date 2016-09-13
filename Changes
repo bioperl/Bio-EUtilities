@@ -1,6 +1,7 @@
 Revision history for Bio-EUtilities
 
 {{$NEXT}}
+  * NCBI related change from HTTP to HTTPS fixed
   * Remove usage of 'given' and 'when' which have been downgraded to
     experimental on perl 5.18.
   * Fixed released tarball so it installs its programs `bp_einfo` and
