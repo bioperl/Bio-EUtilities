@@ -380,7 +380,7 @@ sub elink1 {
         like($response->content, qr(<eLinkResult>), 'ELink response');
         # Data is too volatile to test; commenting for now...
         #my @ids2 = qw(350054 306537 273068 83332 1394);
-        cmp_ok($eutil->get_ids, '>=', 3);
+        cmp_ok($eutil->get_ids, '>=', 1);
         #is_deeply([sort $eutil->get_ids], [sort @ids2],'$elink->get_ids()');
 
         # Linkset tests

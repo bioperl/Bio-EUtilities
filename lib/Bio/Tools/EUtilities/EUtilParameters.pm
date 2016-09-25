@@ -71,32 +71,32 @@ my %MODE = (
     'epost'     => {
         'mode'     => ['POST','GET'],
         'location' => 'epost.fcgi',
-        'params'   => [qw(db retmode id tool email WebEnv query_key)],
+        'params'   => [qw(db retmode id tool email idtype WebEnv query_key)],
                    },
     'efetch'    => {
         'mode'     => ['GET','POST'],
         'location' => 'efetch.fcgi',
         'params'   => [qw(db retmode id retmax retstart rettype strand seq_start
-                       seq_stop complexity report tool email WebEnv query_key)],
+                       seq_stop complexity report tool email idtype WebEnv query_key)],
                    },
     'esearch'   => {
         'mode'     => ['GET','POST'],
         'location' => 'esearch.fcgi',
         'params'   => [qw(db retmode usehistory term field reldate mindate
-                       maxdate datetype retmax retstart rettype sort tool email
+                       maxdate datetype retmax retstart rettype sort tool email idtype
                        WebEnv query_key)],
                    },
     'esummary'  => {
         'mode'     => ['GET','POST'],
         'location' => 'esummary.fcgi',
-        'params'   => [qw(db retmode id retmax retstart rettype tool email
+        'params'   => [qw(db retmode id retmax retstart rettype tool email idtype
                        version WebEnv query_key)],
                    },
     'elink'     => {
         'mode'     => ['GET','POST'],
         'location' => 'elink.fcgi',
         'params'   => [qw(db retmode id reldate mindate maxdate datetype term
-                    dbfrom holding cmd version tool email linkname WebEnv
+                    dbfrom holding cmd version tool email idtype linkname WebEnv
                     query_key)],
                    },
     'egquery'   => {
@@ -119,7 +119,7 @@ BEGIN {
     @PARAMS = qw(db id email retmode rettype usehistory term field tool
     reldate mindate maxdate datetype retstart retmax sort seq_start seq_stop
     strand complexity report dbfrom cmd holding version linkname WebEnv
-    query_key);
+    query_key idtype);
     for my $method (@PARAMS) {
         eval <<END;
 sub $method {
