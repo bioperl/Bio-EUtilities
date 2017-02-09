@@ -371,7 +371,7 @@ sub available_parameters {
            originally set as an array ref are returned based on whether the
            '-join_id' flag is set (default is the same array ref).
  Args    : -type : the eutil name (Default: returns all).  Use of '-list'
-                    supercedes this
+                    supersedes this
            -list : array ref of specific parameters
            -join_ids : Boolean; join IDs based on correspondence (Default: no join)
 

@@ -101,7 +101,7 @@ For more information on einfo see:
  Title    : rewind
  Usage    : $info->rewind() # rewinds all (default)
             $info->rewind('links') # rewinds only links
- Function : 'rewinds' (resets) specified interators (all if no arg)
+ Function : 'rewinds' (resets) specified iterators (all if no arg)
  Returns  : none
  Args     : [OPTIONAL] String:
             'all'    - all iterators (default)

@@ -1188,7 +1188,7 @@ sub get_linked_databases {
             are recognized (case-insensitive):
 
             'all' - rewind all objects and also recursively resets nested object
-                    interators (such as LinkSets and DocSums).
+                    iterators (such as LinkSets and DocSums).
             'globalqueries'
             'fieldinfo' or 'fieldinfos'
             'linkinfo' or 'linkinfos'

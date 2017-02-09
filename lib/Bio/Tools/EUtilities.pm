@@ -1292,8 +1292,8 @@ sub get_linked_databases {
             describing the specific main object iterator to reset. The following
             are recognized (case-insensitive):
 
-            'all' - rewind all objects and also recursively resets nested object interators
-                    (such as LinkSets and DocSums).
+            'all' - rewind all objects and also recursively resets nested object
+                    iterators (such as LinkSets and DocSums).
             'globalqueries' - GlobalQuery objects
             'fieldinfo' or 'fieldinfos' - FieldInfo objects
             'linkinfo' or 'linkinfos' - LinkInfo objects in this layer

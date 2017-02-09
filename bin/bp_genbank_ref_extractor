@@ -172,7 +172,7 @@ my $get_pseudo    = 1;
 =item B<--save>
 
 Specifies the path for the directory where the sequence and log files will be saved. If the
-directory does not exist it will be created altough the path to it must exist. Files on the
+directory does not exist it will be created although the path to it must exist. Files on the
 directory may be rewritten if necessary. If unspecified, a directory named F<extracted sequences>
 on the current directory will be used.
 
