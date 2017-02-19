@@ -248,43 +248,61 @@ my $very_verbose  = '';
 
 =head1 EXAMPLES
 
-=over
+ bp_genbank_ref_extractor \
+   --transcripts=accession \
+   '"homo sapiens"[organism] AND H2B'
 
-=item C<bp_genbank_ref_extractor --transcripts=accession '"homo sapiens"[organism] AND H2B'>
+Search Entrez Gene with the query C<'"homo sapiens"[organism] AND H2B'>
+and save their transcripts sequences only.  Note that default value
+of B<--limit> may only extract some of the hits.
 
-Search Entrez gene with the query C<'"homo sapiens"[organism] AND H2B'>, and
-save their transcripts sequences. Note that default value of B<--limit> may only extract
-some of the hits.
 
-=item C<bp_genbank_ref_extractor --transcripts=accession --proteins=accession --format=fasta '"homo sapiens"[organism] AND H2B' '"homo sapiens"[organism] AND MCPH1'>
+ bp_genbank_ref_extractor \
+   --transcripts=accession --proteins=accession \
+    --format=fasta \
+    '"homo sapiens"[organism] AND H2B' \
+    '"homo sapiens"[organism] AND MCPH1'
 
-Same as first example but also searches for C<'"homo sapiens"[organism] AND MCPH1'>,
-proteins sequences, and saves them in the fasta format.
+Save both transcript and protein sequences in the fasta format, for
+two queries, C<'"homo sapiens"[organism] AND H2B'> and C<'"homo
+sapiens"[organism] AND MCPH1'>.
 
-=item C<bp_genbank_ref_extractor --genes --up=100 --down=500 '"homo sapiens"[organism] AND H2B'>
 
-Same search as first example but saves the genomic sequences instead including
-100 and 500 bp upstream and downstream.
+ bp_genbank_ref_extractor \
+   --genes --down=500 --up=100 \
+   '"homo sapiens"[organism] AND H2B'
 
-=item C<bp_genbank_ref_extractor --genes --asembly='Alternate HuRef' '"homo sapiens"[organism] AND H2B'>
+Download genomic sequences, including 500 bp downstream and 100 bp
+upstream of each gene.
 
-Same search as first example but saves genomic sequences and from the Alternate HuRef genome assembly instead.
 
-=item C<bp_genbank_ref_extractor --save-data=CSV '"homo sapiens"[organism] AND H2B'>
+ bp_genbank_ref_extractor \
+   --genes --asembly='Alternate HuRef' \
+   '"homo sapiens"[organism] AND H2B'
 
-Same search as first example but does not save any sequence but saves all the results in a CSV file.
+Download genomic sequences from the Alternate HuRef genome assembly.
 
-=item C<bp_genbank_ref_extractor --save='search results' --genes=name --upstream=200 downstream=500 --nopseudo --nonnon-coding  --transcripts --proteins  --format=fasta --save-data=CSV '"homo sapiens"[organism] AND H2B' '"homo sapiens"[organism] AND MCPH1'>
 
-Searches on Entrez gene for both C<'"homo sapiens"[organism] AND H2B'> and C<'"homo sapiens"[organism] AND MCPH1'>
-and saves the gene sequences of all hits (not passing the default limit and ignoring pseudogenes) plus 200 and 500bp
-upstream and downstream of them. It will also save the sequences of all transcripts and proteins of each gene (but
-ignoring non-coding transcripts). It will save the sequences in the fasta format, inside a directory C<search results>,
-and save the results in a CSV file
+ bp_genbank_ref_extractor --save-data=CSV \
+   '"homo sapiens"[organism] AND H2B'
 
-=back
+Do not save any sequence, only save the results in a CSV file.
 
-=head1 KNOWN BUGS
+
+ bp_genbank_ref_extractor --save='search-results'
+   --genes=name  downstream=500 --upstream=200 \
+   --nopseudo --nonnon-coding --transcripts --proteins \
+   --format=fasta --save-data=CSV \
+   '"homo sapiens"[organism] AND H2B' \
+   '"homo sapiens"[organism] AND MCPH1'
+
+Ignoring non-coding and pseudo genes, downloads: genomic sequences
+with 500 and 200 bp downstream and upstream respectively, using the
+gene name as filename; transcript and proteins sequences using their
+accession number as filename; everything in fasta format plus a CSV
+file with search results; saved in a directory named F<search-results>
+
+=head1 NON-BUGS
 
 =over
 
@@ -294,21 +312,19 @@ When supplying options, it's possible to not supply a value and use their defaul
 when the expected value is a string, the next argument may be confused as value for the
 option. For example, when using the following command:
 
-C<bp_genbank_ref_extractor --transcripts 'H2A AND homo sapiens'>
+ bp_genbank_ref_extractor --transcripts 'H2A AND homo sapiens'
 
 we mean to search for 'H2A AND homo sapiens' saving only the transcripts and using the default
 as base for the filename. However, the search terms will be interpreted as the base for the
 filenames (but since it's not a valid identifier, it will return an error). To prevent
 this, you can either specify the values:
 
-C<bp_genbank_ref_extractor --transcripts 'accession' 'H2A AND homo sapiens'>
-
-C<bp_genbank_ref_extractor --transcripts='accession' 'H2A AND homo sapiens'>
+ bp_genbank_ref_extractor --transcripts='accession' 'H2A AND homo sapiens'
 
 or you can use the double hash to stop processing options. Note that this should only be used
 after the last option. All arguments supplied after the double dash will be interpreted as search terms
 
-C<bp_genbank_ref_extractor --transcripts -- 'H2A AND homo sapiens'>
+ bp_genbank_ref_extractor --transcripts -- 'H2A AND homo sapiens'
 
 =back
 
