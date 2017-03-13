@@ -289,7 +289,7 @@ Download genomic sequences from the Alternate HuRef genome assembly.
 Do not save any sequence, only save the results in a CSV file.
 
 
- bp_genbank_ref_extractor --save='search-results'
+ bp_genbank_ref_extractor --save='search-results' \
    --genes=name  downstream=500 --upstream=200 \
    --nopseudo --nonnon-coding --transcripts --proteins \
    --format=fasta --save-data=CSV \
@@ -312,19 +312,22 @@ When supplying options, it's possible to not supply a value and use their defaul
 when the expected value is a string, the next argument may be confused as value for the
 option. For example, when using the following command:
 
- bp_genbank_ref_extractor --transcripts 'H2A AND homo sapiens'
+ bp_genbank_ref_extractor --transcripts \
+   'H2A AND homo sapiens'
 
 we mean to search for 'H2A AND homo sapiens' saving only the transcripts and using the default
 as base for the filename. However, the search terms will be interpreted as the base for the
 filenames (but since it's not a valid identifier, it will return an error). To prevent
 this, you can either specify the values:
 
- bp_genbank_ref_extractor --transcripts='accession' 'H2A AND homo sapiens'
+ bp_genbank_ref_extractor --transcripts='accession' \
+   'H2A AND homo sapiens'
 
 or you can use the double hash to stop processing options. Note that this should only be used
 after the last option. All arguments supplied after the double dash will be interpreted as search terms
 
- bp_genbank_ref_extractor --transcripts -- 'H2A AND homo sapiens'
+ bp_genbank_ref_extractor --transcripts \
+   -- 'H2A AND homo sapiens'
 
 =back
 
