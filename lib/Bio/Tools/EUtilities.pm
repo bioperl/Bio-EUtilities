@@ -323,8 +323,13 @@ sub parse_data {
             $xs->XMLin($response, forcearray => $EUTIL_DATA{$eutil});
     # check for errors
     if ($simple->{ERROR}) {
-        my $error = $simple->{ERROR};
-        $self->throw("NCBI $eutil fatal error: ".$error) unless ref $error;
+        my $error = "NCBI $eutil fatal error: ".$simple->{ERROR};
+         # seems that some epost errors aren't fatal, this will likely need to be optimized to handle other errors
+        if ($eutil eq 'epost') { 
+            $self->warn($error) ;
+        } elsif (!ref $error) {
+            $self->throw($error) ;
+        }
     }
     if ($simple->{InvalidIdList}) {
         $self->warn("NCBI $eutil error: Invalid ID List".$simple->{InvalidIdList});
