@@ -316,21 +316,27 @@ sub parse_data {
     my $response = $self->response ? $self->response :
                    $self->_fh      ? $self->_fh      :
         $self->throw('No response or stream specified');
-    my $simple = ($eutil eq 'espell') ?
-            $xs->XMLin($self->_fix_espell($response), forcearray => $EUTIL_DATA{$eutil}) :
-        ($response && $response->isa("HTTP::Response")) ?
-            $xs->XMLin($response->content, forcearray => $EUTIL_DATA{$eutil}) :
-            $xs->XMLin($response, forcearray => $EUTIL_DATA{$eutil});
-    # check for errors
-    if ($simple->{ERROR}) {
-        my $error = "NCBI $eutil fatal error: ".$simple->{ERROR};
-         # seems that some epost errors aren't fatal, this will likely need to be optimized to handle other errors
-        if ($eutil eq 'epost') { 
-            $self->warn($error) ;
-        } elsif (!ref $error) {
-            $self->throw($error) ;
-        }
+
+    my $data;
+    if ($eutil eq 'espell') {
+        $data = $self->_fix_espell($response);
+    } elsif ($response && $response->isa("HTTP::Response")) {
+        $data = $response->content;
+    } else {
+        $data = $response;
     }
+    my $simple = $xs->XMLin($data, ForceArray => $EUTIL_DATA{$eutil});
+
+    ## The ERROR element is #PCDATA only, so it can only have one text
+    ## element.  However, in can still have zero text elements in
+    ## which case it will be a reference to an empty hash.
+    if ($simple->{ERROR} && ! ref($simple->{ERROR})) {
+        ## Some errors may not be fatal but there doesn't seem to be a
+        ## way for us to know.  So we warn.
+        self->warn("NCBI $eutil error: " . $simple->{ERROR});
+    }
+
+
     if ($simple->{InvalidIdList}) {
         $self->warn("NCBI $eutil error: Invalid ID List".$simple->{InvalidIdList});
         return;
