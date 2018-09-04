@@ -328,9 +328,9 @@ sub parse_data {
     my $simple = $xs->XMLin($data, ForceArray => $EUTIL_DATA{$eutil});
 
     ## The ERROR element is #PCDATA only, so it can only have one text
-    ## element.  However, in can still have zero text elements in
+    ## element.  However, it can still have zero text elements in
     ## which case it will be a reference to an empty hash.
-    if ($simple->{ERROR} && ! ref($simple->{ERROR})) {
+    if (defined $simple->{ERROR} && ! ref($simple->{ERROR})) {
         ## Some errors may not be fatal but there doesn't seem to be a
         ## way for us to know.  So we warn.
         self->warn("NCBI $eutil error: " . $simple->{ERROR});
