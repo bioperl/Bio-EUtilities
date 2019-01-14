@@ -1,7 +1,8 @@
 Revision history for Bio-EUtilities
 
 {{$NEXT}}
-
+1.75.1	2018-01-01
+  * Added NCBI API key option.
 1.75      2016-09-25 23:06:59-05:00 America/Chicago
 
 1.74      2016-09-25 20:09:15-05:00 America/Chicago
