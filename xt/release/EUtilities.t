@@ -27,6 +27,7 @@ plan tests => $test_ct;
 
 my $debug = $ENV{BIOPERLDEBUG} || $ENV{BIOPERL_DEBUG} || 0;
 my $email = $ENV{BIOPERL_EMAIL};
+my $api_key = $ENV{BIOPERL_APIKEY};
 
 my ($eutil, $response);
 
@@ -67,6 +68,7 @@ sub efetch {
                                         -db         => 'protein',
                                         -id         => [$ids[0]],
                                         -rettype    => 'fasta',
+                                        -api_key    => $api_key,
                                         -email      => $email
                                           );
 
@@ -97,6 +99,7 @@ sub epost {
                                         -eutil      => 'epost',
                                         -db         => 'protein',
                                         -id         => \@ids,
+                                        -api_key    => $api_key,
                                         -email      => $email
                                           );
 
@@ -215,6 +218,7 @@ sub esummary {
                                          -eutil      => 'esummary',
                                          -db         => 'protein',
                                          -id            => \@ids,
+                                         -api_key    => $api_key,
                                          -email      => $email
                                            );
         isa_ok($eutil, 'Bio::DB::GenericWebAgent');
@@ -260,6 +264,7 @@ sub esearch {
                                         -db         => 'protein',
                                         -term       => $term,
                                         -retmax     => 100,
+                                        -api_key    => $api_key,
                                         -email      => $email
                                           );
 
@@ -281,6 +286,7 @@ sub esearch {
                                         -usehistory => 'y',
                                         -term       => $term,
                                         -retmax     => 100,
+                                        -api_key    => $api_key,
                                         -email      => $email
                                           );
 
@@ -343,6 +349,7 @@ sub einfo {
         # all databases (list)
         $eutil = Bio::DB::EUtilities->new(
                                         -eutil      => 'einfo',
+                                        -api_key    => $api_key,
                                         -email      => $email
                                           );
 
@@ -370,6 +377,7 @@ sub elink1 {
                                         -db         => 'taxonomy',
                                         -dbfrom     => 'protein',
                                         -id         => \@ids,
+                                        -api_key    => $api_key,
                                         -email      => $email
                                           );
 
@@ -405,6 +413,7 @@ sub elink2 {
                                         -db         => 'nuccore',
                                         -dbfrom     => 'genomeprj',
                                         -id         => @genome_ids,
+                                        -api_key    => $api_key,
                                         -email      => $email
                                           );
 
@@ -436,6 +445,7 @@ sub egquery {
     $eutil = Bio::DB::EUtilities->new(
                                     -eutil      => 'egquery',
                                     -term       => $term,
+                                    -api_key    => $api_key,
                                     -email      => $email
                                       );
 

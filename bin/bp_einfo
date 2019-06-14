@@ -38,6 +38,8 @@ Command line options:
 
   -h/--help
         show this documentation
+  -a/api_key
+        NCBI API key (recommended)
 
 As per NCBI's policy regarding eutils access, a valid email is required.  This
 is not enforced here (if one is provided you will get a standard warning), but
@@ -59,6 +61,7 @@ use Bio::DB::EUtilities;
 my ($db, @fields, @links, $outfile, $email);
 GetOptions(
        'e|email:s'          => \$email,
+       'a|api_key:s'        => \$api_key,
        'd|db|database:s'    => \$db,
        'f|field:s'          => \@fields,
        'l|link:s'           => \@links,
@@ -75,12 +78,14 @@ if( $outfile ) {
 
 if (!defined $db) {
     my $eutil = Bio::DB::EUtilities->new(-eutil => 'einfo',
+                                         -api_key => $api_key,
                                          -email => $email);
     print $outfh join("\n",$eutil->get_available_databases);
     exit;
 } else {
     my $eutil = Bio::DB::EUtilities->new(-eutil => 'einfo',
                                          -db => $db,
+                                         -api_key => $api_key,
                                          -email => $email);
     if (@links || @fields) {
         for my $fi ($eutil->get_FieldInfo) {

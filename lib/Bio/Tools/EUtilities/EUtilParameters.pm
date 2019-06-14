@@ -20,6 +20,7 @@ use Bio::Root::IO;
  my @params = (-eutil => 'efetch',
               db => 'nucleotide',
               id => \@ids,
+              api_key => 'mYApiKeyFrOMNCBI',
               email => 'me@foo.bar',
               retmode => 'xml');
 
@@ -66,48 +67,48 @@ my %MODE = (
     'einfo'     => {
         'mode'     => ['GET'],
         'location' => 'einfo.fcgi',
-        'params'   => [qw(db tool email)],
+        'params'   => [qw(db tool email api_key)],
                    },
     'epost'     => {
         'mode'     => ['POST','GET'],
         'location' => 'epost.fcgi',
-        'params'   => [qw(db retmode id tool email idtype WebEnv query_key)],
+        'params'   => [qw(db retmode id tool email api_key idtype WebEnv query_key)],
                    },
     'efetch'    => {
         'mode'     => ['GET','POST'],
         'location' => 'efetch.fcgi',
         'params'   => [qw(db retmode id retmax retstart rettype strand seq_start
-                       seq_stop complexity report tool email idtype WebEnv query_key)],
+                       seq_stop complexity report tool email api_key idtype WebEnv query_key)],
                    },
     'esearch'   => {
         'mode'     => ['GET','POST'],
         'location' => 'esearch.fcgi',
         'params'   => [qw(db retmode usehistory term field reldate mindate
-                       maxdate datetype retmax retstart rettype sort tool email idtype
+                       maxdate datetype retmax retstart rettype sort tool email api_key idtype
                        WebEnv query_key)],
                    },
     'esummary'  => {
         'mode'     => ['GET','POST'],
         'location' => 'esummary.fcgi',
-        'params'   => [qw(db retmode id retmax retstart rettype tool email idtype
+        'params'   => [qw(db retmode id retmax retstart rettype tool email api_key idtype
                        version WebEnv query_key)],
                    },
     'elink'     => {
         'mode'     => ['GET','POST'],
         'location' => 'elink.fcgi',
         'params'   => [qw(db retmode id reldate mindate maxdate datetype term
-                    dbfrom holding cmd version tool email idtype linkname WebEnv
+                    dbfrom holding cmd version tool email api_key idtype linkname WebEnv
                     query_key)],
                    },
     'egquery'   => {
         'mode'     => ['GET','POST'],
         'location' => 'egquery.fcgi',
-        'params'   => [qw(term retmode tool email)],
+        'params'   => [qw(term retmode tool email api_key)],
                    },
     'espell'    => {
         'mode'     => ['GET','POST'],
         'location' => 'espell.fcgi',
-        'params'   => [qw(db retmode term tool email )],
+        'params'   => [qw(db retmode term tool email api_key )],
                    }
 );
 
@@ -116,7 +117,7 @@ my @PARAMS;
 # generate getter/setters (will move this into individual ones at some point)
 
 BEGIN {
-    @PARAMS = qw(db id email retmode rettype usehistory term field tool
+    @PARAMS = qw(db id email api_key retmode rettype usehistory term field tool
     reldate mindate maxdate datetype retstart retmax sort seq_start seq_stop
     strand complexity report dbfrom cmd holding version linkname WebEnv
     query_key idtype);
@@ -225,7 +226,7 @@ sub reset_parameters {
 =head2 carryover
 
  Title    : carryover
- Usage    : $obj->carryover(qw(email tool db))
+ Usage    : $obj->carryover(qw(email api_key tool db))
  Function : Carries over the designated parameters when using reset_parameters()
  Returns  : a list of carried-over parameters
  Args     : An array reference of parameters to carry over, followed optionally
