@@ -58,7 +58,7 @@ links as you want by using multiple -f/-l E<lt>ARGE<gt> on the command line.
 use Getopt::Long;
 use Bio::DB::EUtilities;
 
-my ($db, @fields, @links, $outfile, $email);
+my ($db, @fields, @links, $outfile, $email, $api_key);
 GetOptions(
        'e|email:s'          => \$email,
        'a|api_key:s'        => \$api_key,

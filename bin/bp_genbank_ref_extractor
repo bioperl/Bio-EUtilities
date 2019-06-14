@@ -92,7 +92,7 @@ case of heavy usage.
 my $email = "";
 =item B <--api_key>
 NCBI requires an API key for requests over 10/sec as of December 2018. You
-may generate one in the "My NCBI" area 
+may generate one in the "My NCBI" area
 =cut
 my $api_key = "";
 =item B<--format>
