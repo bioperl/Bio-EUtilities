@@ -235,20 +235,29 @@ sub esummary {
             isa_ok($ds, 'Bio::Tools::EUtilities::Summary::DocSum');
 
             my $id = $ds->get_id();
-            ok(exists($docsum{$id}), '$docsum->get_id()');
+            if (exists($docsum{$id})) {
+                ok(exists($docsum{$id}), '$docsum->get_id()');
 
-            my %items = %{ $docsum{$id} };
+                my %items = %{ $docsum{$id} };
 
-            # iterate using item names
+                # iterate using item names
 
-            for my $name ($ds->get_all_names()) {
-                $ct++;
-                my ($it) = $ds->get_Items_by_name($name);
-                ok(exists $items{$name},'DocSum Name exists');
-                is($it->get_name, $name, 'get_name(),DocSum Name');
-                is($ds->get_type_by_name($name), $items{$name}->[0],
-                   'get_type_by_name() from DocSum');
-                is($it->get_type, $items{$name}->[0], 'get_type() from Item');
+                for my $name ($ds->get_all_names()) {
+                    
+                    my ($it) = $ds->get_Items_by_name($name);
+                    if (exists $items{$name}) {
+                        $ct++;
+                        ok(exists $items{$name},'DocSum Name exists');
+                        is($it->get_name, $name, 'get_name(),DocSum Name');
+                        is($ds->get_type_by_name($name), $items{$name}->[0],
+                           'get_type_by_name() from DocSum');
+                        is($it->get_type, $items{$name}->[0], 'get_type() from Item');
+                    } else{
+                        diag("Unmatched DocSum ".$name.", Type:".
+                             $it->get_type.", Content:".$it->get_content()) if
+                            $debug;
+                    }
+                }
             }
         }
         is($ct, 60);
@@ -458,5 +467,3 @@ sub egquery {
     cmp_ok(scalar(@gq), '>=', 30, 'get_GlobalQueries')
     }
 }
-
-
