@@ -243,7 +243,6 @@ sub esummary {
                 # iterate using item names
 
                 for my $name ($ds->get_all_names()) {
-                    
                     my ($it) = $ds->get_Items_by_name($name);
                     if (exists $items{$name}) {
                         $ct++;
@@ -252,10 +251,8 @@ sub esummary {
                         is($ds->get_type_by_name($name), $items{$name}->[0],
                            'get_type_by_name() from DocSum');
                         is($it->get_type, $items{$name}->[0], 'get_type() from Item');
-                    } else{
-                        diag("Unmatched DocSum ".$name.", Type:".
-                             $it->get_type.", Content:".$it->get_content()) if
-                            $debug;
+                    } else {
+                        diag("Unmatched DocSum ".$name.", Type:".$it->get_type.", Content:".$it->get_content()) if $debug;
                     }
                 }
             }
