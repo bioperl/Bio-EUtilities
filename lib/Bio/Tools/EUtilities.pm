@@ -4,7 +4,8 @@ use utf8;
 use strict;
 use warnings;
 use base qw(Bio::Root::IO Bio::Tools::EUtilities::EUtilDataI);
-use XML::Simple;
+use XML::LibXML;
+use Data::Dumper;
 
 # ABSTRACT: NCBI eutil XML parsers.
 # AUTHOR:   Chris Fields <cjfields@bioperl.org>
@@ -135,10 +136,10 @@ for instance.
 {
 
 my %DATA_MODULE = (
-    'esearch'   => 'Query',
-    'egquery'   => 'Query',
-    'espell'    => 'Query',
-    'epost'     => 'Query',
+    'esearch'   => 'Query',  
+    'egquery'   => 'Query',  # TODO: make egquery module
+    'espell'    => 'Query',  # TODO: make espell module
+    'epost'     => 'Query',  # TODO: make epost module
     'elink'     => 'Link',
     'einfo'     => 'Info',
     'esummary'  => 'Summary',
@@ -312,56 +313,63 @@ my %EUTIL_DATA = (
 sub parse_data {
     my $self = shift;
     my $eutil = $self->eutil;
-    my $xs = XML::Simple->new();
-    my $response = $self->response ? $self->response :
-                   $self->_fh      ? $self->_fh      :
+    my $xp = XML::LibXML->new();
+    my $dom = $self->response  ? $xp->load_xml(string => $self->response->content) :
+                   $self->_fh  ? $xp->load_xml(IO => $self->_fh)      :
         $self->throw('No response or stream specified');
-
-    my $data;
-    if ($eutil eq 'espell') {
-        $data = $self->_fix_espell($response);
-    } elsif ($response && $response->isa("HTTP::Response")) {
-        $data = $response->content;
-    } else {
-        $data = $response;
-    }
-    my $simple = $xs->XMLin($data, ForceArray => $EUTIL_DATA{$eutil});
-
+    $self->{dom} = $dom;
+    #my $data;
+    #if ($eutil eq 'espell') {
+    #    #$data = $self->_fix_espell($response);
+    #    $data = $response->content;
+    #} elsif ($response && $response->isa("HTTP::Response")) {
+    #    $data = $response->content;
+    #} else {
+    #    $data = $response->content;
+    #}
+    ##my $simple = $xp->load_xml($data, ForceArray => $EUTIL_DATA{$eutil});
+    #print STDERR "$data";
+    # my $dom = $xp->load_xml(string => $data);
+    
+    # print STDERR $dom->toString();
+    
     ## The ERROR element is #PCDATA only, so it can only have one text
     ## element.  However, it can still have zero text elements in
     ## which case it will be a reference to an empty hash.
-    if (defined $simple->{ERROR} && ! ref($simple->{ERROR})) {
-        ## Some errors may not be fatal but there doesn't seem to be a
-        ## way for us to know.  So we warn.
-        self->warn("NCBI $eutil error: " . $simple->{ERROR});
-    }
+    #if (defined $dom->{ERROR} && ! ref($dom->{ERROR})) {
+    #    ## Some errors may not be fatal but there doesn't seem to be a
+    #    ## way for us to know.  So we warn.
+    #    self->warn("NCBI $eutil error: " . $dom->{ERROR});
+    #}
 
 
-    if ($simple->{InvalidIdList}) {
-        $self->warn("NCBI $eutil error: Invalid ID List".$simple->{InvalidIdList});
-        return;
-    }
-    if ($simple->{ErrorList} || $simple->{WarningList}) {
-        my @errorlist = @{ $simple->{ErrorList} } if $simple->{ErrorList};
-        my @warninglist = @{ $simple->{WarningList} } if $simple->{WarningList};
-        my ($err_warn);
-        for my $error (@errorlist) {
-            my $messages = join("\n\t",map {"$_  [".$error->{$_}.']'}
-                                grep {!ref $error->{$_}} keys %$error);
-            $err_warn .= "Error : $messages";
-        }
-        for my $warn (@warninglist) {
-            my $messages = join("\n\t",map {"$_  [".$warn->{$_}.']'}
-                                grep {!ref $warn->{$_}} keys %$warn);
-            $err_warn .= "Warnings : $messages";
-        }
-        chomp($err_warn);
-        $self->warn("NCBI $eutil Errors/Warnings:\n".$err_warn)
-        # don't return as some data may still be useful
-    }
-    delete $self->{'_response'} unless $self->cache_response;
+    #if ($dom->{InvalidIdList}) {
+    #    $self->warn("NCBI $eutil error: Invalid ID List".$simple->{InvalidIdList});
+    #    return;
+    #}
+    #if ($simple->{ErrorList} || $simple->{WarningList}) {
+    #    my @errorlist = @{ $simple->{ErrorList} } if $simple->{ErrorList};
+    #    my @warninglist = @{ $simple->{WarningList} } if $simple->{WarningList};
+    #    my ($err_warn);
+    #    for my $error (@errorlist) {
+    #        my $messages = join("\n\t",map {"$_  [".$error->{$_}.']'}
+    #                            grep {!ref $error->{$_}} keys %$error);
+    #        $err_warn .= "Error : $messages";
+    #    }
+    #    for my $warn (@warninglist) {
+    #        my $messages = join("\n\t",map {"$_  [".$warn->{$_}.']'}
+    #                            grep {!ref $warn->{$_}} keys %$warn);
+    #        $err_warn .= "Warnings : $messages";
+    #    }
+    #    chomp($err_warn);
+    #    $self->warn("NCBI $eutil Errors/Warnings:\n".$err_warn)
+    #    # don't return as some data may still be useful
+    #}
+    #delete $self->{'_response'} unless $self->cache_response;
+    
+    # TODO: remove lazy DOM parsing?
     $self->{'_parsed'} = 1;
-    $self->_add_data($simple);
+    #$self->_add_data($dom);
 }
 
 # implemented only for elink/esummary, still experimental
@@ -372,7 +380,7 @@ sub parse_chunk {
     my $tag = $eutil eq 'elink'    ? 'LinkSet' :
               $eutil eq 'esummary' ? 'DocSum'  :
               $self->throw("Only eutil elink/esummary use parse_chunk()");
-    my $xs = XML::Simple->new();
+    my $xp = XML::LibXML::Reader->new();
     if ($self->response) {
         $self->throw("Lazy parsing not implemented for HTTP::Response data yet");
         delete $self->{'_response'} if !$self->cache_response && $self->data_parsed;
@@ -391,7 +399,7 @@ sub parse_chunk {
             return;
         }
         $self->_add_data(
-            $xs->XMLin($chunk, forcearray => $EUTIL_DATA{$eutil}, KeepRoot => 1)
+            $xp->XMLin($chunk, forcearray => $EUTIL_DATA{$eutil}, KeepRoot => 1)
             );
     }
 }
@@ -484,6 +492,7 @@ sub print_all {
 
 sub get_ids {
     my ($self, $request) = @_;
+    $self->throw_not_implemented();
     my $eutil = $self->eutil;
     if ($self->is_lazy) {
         $self->warn('get_ids() not implemented when using lazy mode');
@@ -542,7 +551,7 @@ sub get_ids {
 =cut
 
 sub get_database {
-    return ($_[0]->get_databases)[0];
+    return (shift->get_databases)[0];
 }
 
 =head2 get_db (alias for get_database)
@@ -572,30 +581,34 @@ sub get_db {
 =cut
 
 sub get_databases {
-    my ($self, $db) = @_;
-    $self->parse_data unless $self->data_parsed;
-    my $eutil = $self->eutil;
-    my @dbs;
-    if ($eutil eq 'einfo' || $eutil eq 'espell') {
-        @dbs = $self->{'_dbname'} ||
-        $self->{'_database'} ||
-        $self->get_available_databases;
-    } elsif ($eutil eq 'egquery') {
-        @dbs = map {$_->get_database} ($self->get_GlobalQueries);
-    } elsif ($eutil eq 'elink') {
-        # only unique dbs
-        my %tmp;
-        @dbs = sort grep {!$tmp{$_}++}
-            map {($_->get_databases)} $self->get_LinkSets;
-    } elsif ($self->parameter_base) {
-        if ($self->parameter_base->eutil eq 'elink') {
-            @dbs = $self->parameter_base->dbfrom;
-        } else {
-            @dbs = $self->parameter_base->db;
-        }
-    }
-    return @dbs;
+    shift->throw_not_implemented();
 }
+
+#sub get_databases {
+#    my ($self, $db) = @_;
+#    $self->parse_data unless $self->data_parsed;
+#    my $eutil = $self->eutil;
+#    my @dbs;
+#    if ($eutil eq 'einfo' || $eutil eq 'espell') {
+#        @dbs = $self->{'_dbname'} ||
+#        $self->{'_database'} ||
+#        $self->get_available_databases;
+#    } elsif ($eutil eq 'egquery') {
+#        @dbs = map {$_->get_database} ($self->get_GlobalQueries);
+#    } elsif ($eutil eq 'elink') {
+#        # only unique dbs
+#        my %tmp;
+#        @dbs = sort grep {!$tmp{$_}++}
+#            map {($_->get_databases)} $self->get_LinkSets;
+#    } elsif ($self->parameter_base) {
+#        if ($self->parameter_base->eutil eq 'elink') {
+#            @dbs = $self->parameter_base->dbfrom;
+#        } else {
+#            @dbs = $self->parameter_base->db;
+#        }
+#    }
+#    return @dbs;
+#}
 
 =head2 get_dbs (alias for get_databases)
 
@@ -1514,24 +1527,24 @@ sub _seekable {
 
 # fixes odd bad XML issue espell data (still present 6-24-07)
 
-sub _fix_espell {
-    my ($self, $response) = @_;
-    my $temp;
-    my $type = ref($response);
-    if ($type eq 'GLOB') {
-        $temp .= $_ for <$response>;
-    } elsif ($type eq 'HTTP::Response') {
-        $temp = $response->content;
-    } else {
-        $self->throw("Unrecognized ref type $type");
-    }
-    if ($temp =~ m{^<html>}) {
-        $self->throw("NCBI espell nonrecoverable error: HTML content returned")
-    }
-    $temp =~ s{<ERROR>(.*?)<ERROR>}{<ERROR>$1</ERROR>};
-    return $temp;
-}
-
+#sub _fix_espell {
+#    my ($self, $response) = @_;
+#    my $temp;
+#    my $type = ref($response);
+#    if ($type eq 'GLOB') {
+#        $temp .= $_ for <$response>;
+#    } elsif ($type eq 'HTTP::Response') {
+#        $temp = $response->content;
+#    } else {
+#        $self->throw("Unrecognized ref type $type");
+#    }
+#    if ($temp =~ m{^<html>}) {
+#        $self->throw("NCBI espell nonrecoverable error: HTML content returned")
+#    }
+#    $temp =~ s{<ERROR>(.*?)<ERROR>}{<ERROR>$1</ERROR>};
+#    return $temp;
+#}
+#
 sub _load_eutil_module {
     my ($self, $class) = @_;
     my $ok;
@@ -1549,6 +1562,16 @@ END
        ;
     }
     return $ok;
+}
+
+sub _add_data {
+    my ($self, $dom) = @_;
+    my $eutil = $self->eutil;
+    if (!Scalar::Util::blessed($dom) || !$dom->isa('XML::LibXML::Document')) {
+        $self->throw("Bad $eutil data");
+    }
+    print STDERR Dumper $dom;
+    $self->{dom} = $dom;
 }
 
 1;
