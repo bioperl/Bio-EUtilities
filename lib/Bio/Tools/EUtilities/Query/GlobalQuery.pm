@@ -36,6 +36,8 @@ sub new {
     my $self = $class->SUPER::new(@args);
     $self->eutil('egquery');
     $self->datatype('globalquery');
+    my ($term) = $self->_rearrange([qw(TERM)], @args);
+    $self->{_term} = $term;
     return $self;
 }
 
@@ -51,6 +53,7 @@ sub new {
 
 sub get_term {
     my ($self) = @_;
+    # the XML is sometimes blank; we provide a backup of the query term in case this happens
     return $self->{'_term'};
 }
 
@@ -66,7 +69,7 @@ sub get_term {
 
 sub get_database {
     my ($self) = @_;
-    return $self->{'_dbname'};
+    return ($self->{el}->findnodes('.//DbName'))[0]->to_literal();
 }
 
 =head2 get_count
@@ -81,7 +84,7 @@ sub get_database {
 
 sub get_count {
     my ($self) = @_;
-    return $self->{'_count'};
+    return ($self->{el}->findnodes('.//Count'))[0]->to_literal();
 }
 
 =head2 get_status
@@ -96,7 +99,7 @@ sub get_count {
 
 sub get_status {
     my ($self) = @_;
-    return $self->{'_status'};
+    return ($self->{el}->findnodes('.//Status'))[0]->to_literal();
 }
 
 =head2 get_menu_name
@@ -111,14 +114,13 @@ sub get_status {
 
 sub get_menu_name {
     my $self = shift;
-    return $self->{'_menuname'};
+    return ($self->{el}->findnodes('.//MenuName'))[0]->to_literal();
 }
 
 # private method
-
 sub _add_data {
     my ($self, $data) = @_;
-    map {$self->{'_'.lc $_} = $data->{$_}} keys %$data;
+    $self->{el} = $data;
 }
 
 =head2 to_string

@@ -37,6 +37,111 @@ Pluggable module for handling query-related data returned from eutils.
 
 =cut
 
+=head1 Base Bio::Tools::EUtilies methods
+
+=head2 parse_data
+
+ Title    : parse_data
+ Usage    : $parser->parse_data
+ Function : direct call to parse data; normally implicitly called
+ Returns  : none
+ Args     : none
+
+=cut
+
+{
+
+my %EUTIL_DATA = (
+    'egquery'   => [],
+    'espell'    => [qw(Original Replaced)],
+    'esearch'   => [qw(Id ErrorList WarningList)],
+    );
+
+sub parse_data {
+    my $self = shift;
+    # TODO: subclass the other utils, remove lots of if/elsif cruft
+    return if $self->data_parsed();
+    my $eutil = $self->eutil();
+    my $xp = XML::LibXML->new();
+    my $dom = $self->response  ? $xp->load_xml(string => $self->response->content) :
+                   $self->_fh  ? $xp->load_xml(IO => $self->_fh)      :
+        $self->throw('No response or stream specified');
+    
+    # Cache DOM
+    $self->{dom} = $dom;
+    $self->{'_parsed'} = 1;
+    
+    
+    # TODO: error handling
+    ## The ERROR element is #PCDATA only, so it can only have one text
+    ## element.  However, it can still have zero text elements in
+    ## which case it will be a reference to an empty hash.
+    #if (defined $dom->{ERROR} && ! ref($dom->{ERROR})) {
+    #    ## Some errors may not be fatal but there doesn't seem to be a
+    #    ## way for us to know.  So we warn.
+    #    self->warn("NCBI $eutil error: " . $dom->{ERROR});
+    #}
+    #if ($dom->{InvalidIdList}) {
+    #    $self->warn("NCBI $eutil error: Invalid ID List".$simple->{InvalidIdList});
+    #    return;
+    #}
+    #if ($simple->{ErrorList} || $simple->{WarningList}) {
+    #    my @errorlist = @{ $simple->{ErrorList} } if $simple->{ErrorList};
+    #    my @warninglist = @{ $simple->{WarningList} } if $simple->{WarningList};
+    #    my ($err_warn);
+    #    for my $error (@errorlist) {
+    #        my $messages = join("\n\t",map {"$_  [".$error->{$_}.']'}
+    #                            grep {!ref $error->{$_}} keys %$error);
+    #        $err_warn .= "Error : $messages";
+    #    }
+    #    for my $warn (@warninglist) {
+    #        my $messages = join("\n\t",map {"$_  [".$warn->{$_}.']'}
+    #                            grep {!ref $warn->{$_}} keys %$warn);
+    #        $err_warn .= "Warnings : $messages";
+    #    }
+    #    chomp($err_warn);
+    #    $self->warn("NCBI $eutil Errors/Warnings:\n".$err_warn)
+    #    # don't return as some data may still be useful
+    #}
+    #delete $self->{'_response'} unless $self->cache_response;
+
+    # History
+    if ($eutil eq 'egquery') {
+        my $hist;
+        eval {
+            my @hist = $dom->findnodes('//WebEnv'));
+        };
+        if (!$@) {
+            my $cookie = Bio::Tools::EUtilities::History->new(-eutil => $eutil,
+                                -verbose => $self->verbose);
+            $cookie->_add_data($dom);
+            push @{$self->{'_histories'}}, $cookie;
+        }
+    }
+    
+    # GlobalQuery; we pass in the DOM elements
+    if ($eutil eq 'egquery') {
+        my %global_args;
+        my $term = $self->get_term();
+        #if (!$term and $self->parameter_base) {
+        #    $term = $self->parameter_base->term();
+        #}
+        $global_args{'-term'} = $term if $term;
+        for my $gquery ($dom->findnodes('//ResultItem')) {
+            my $qd = Bio::Tools::EUtilities::Query::GlobalQuery->new(-eutil => 'egquery',
+                                                        -datatype => 'globalquery',
+                                                        -verbose => $self->verbose,
+                                                        %global_args);
+            $qd->_add_data($gquery);
+            push @{ $self->{'_globalqueries'} }, $qd;
+        }
+    }    
+    
+    # TODO: remove lazy DOM parsing?  We store the DOM instance, not sure if this is really needed
+}
+
+}
+
 =head1 Bio::Tools::EUtilities::Query methods
 
 =cut
@@ -104,11 +209,9 @@ sub get_databases {
     my @dbs;
     if ($eutil eq 'einfo' || $eutil eq 'espell') {
         return ($self->{dom}->findnodes('//Database'))[0]->to_literal();
-        #@dbs = $self->{'_dbname'} ||
-        #$self->{'_database'} ||
-        #$self->get_available_databases;
     } elsif ($eutil eq 'egquery') {
-        @dbs = map {$_->to_literal()} $self->{dom}->findnodes('//Database');
+        @dbs = map {$_->get_database} $self->get_GlobalQueries();
+        #@dbs = map {$_->to_literal()} $self->{dom}->findnodes('//DbName');
     } elsif ( $eutil eq 'esearch') {
         # get the database from the passed parameter
         @dbs = $self->parameter_base() ? $self->parameter_base->db() : ();
@@ -179,7 +282,13 @@ sub get_term {
         $term = $self->parameter_base ? $self->parameter_base->term() : undef;
     } elsif ($eutil eq 'espell') {
         $term = ($self->{dom}->findnodes('//Query'))[0]->to_literal();
-    } 
+    } elsif ($eutil eq 'egquery') {
+        $term = ($self->{dom}->findnodes('//Term'))[0]->to_literal();
+        # Fallback if term is blank
+        if (!$term) {
+            $term = $self->parameter_base ? $self->parameter_base->term() : undef;
+        }
+    }
     return $term;
 }
 

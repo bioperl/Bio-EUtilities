@@ -312,27 +312,15 @@ my %EUTIL_DATA = (
 
 sub parse_data {
     my $self = shift;
+    $self->throw_not_implemented();
     my $eutil = $self->eutil;
     my $xp = XML::LibXML->new();
     my $dom = $self->response  ? $xp->load_xml(string => $self->response->content) :
                    $self->_fh  ? $xp->load_xml(IO => $self->_fh)      :
         $self->throw('No response or stream specified');
     $self->{dom} = $dom;
-    #my $data;
-    #if ($eutil eq 'espell') {
-    #    #$data = $self->_fix_espell($response);
-    #    $data = $response->content;
-    #} elsif ($response && $response->isa("HTTP::Response")) {
-    #    $data = $response->content;
-    #} else {
-    #    $data = $response->content;
-    #}
-    ##my $simple = $xp->load_xml($data, ForceArray => $EUTIL_DATA{$eutil});
-    #print STDERR "$data";
-    # my $dom = $xp->load_xml(string => $data);
     
-    # print STDERR $dom->toString();
-    
+    # TODO: error handling
     ## The ERROR element is #PCDATA only, so it can only have one text
     ## element.  However, it can still have zero text elements in
     ## which case it will be a reference to an empty hash.
@@ -341,8 +329,6 @@ sub parse_data {
     #    ## way for us to know.  So we warn.
     #    self->warn("NCBI $eutil error: " . $dom->{ERROR});
     #}
-
-
     #if ($dom->{InvalidIdList}) {
     #    $self->warn("NCBI $eutil error: Invalid ID List".$simple->{InvalidIdList});
     #    return;
@@ -369,7 +355,6 @@ sub parse_data {
     
     # TODO: remove lazy DOM parsing?
     $self->{'_parsed'} = 1;
-    #$self->_add_data($dom);
 }
 
 # implemented only for elink/esummary, still experimental
