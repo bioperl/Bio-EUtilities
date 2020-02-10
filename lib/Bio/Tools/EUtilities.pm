@@ -982,11 +982,8 @@ sub print_DocSums {
 =cut
 
 sub get_available_databases {
-    my $self = shift;
-    $self->parse_data unless $self->data_parsed;
-    ($self->{'_available_databases'}) ?
-        return @{($self->{'_available_databases'})} :
-        return ();
+    my ($self, @args) = @_;
+    $self->throw_not_implemented();
 }
 
 =head2 get_record_count
@@ -1001,9 +998,8 @@ sub get_available_databases {
 =cut
 
 sub get_record_count {
-    my $self = shift;
-    $self->parse_data unless $self->data_parsed;
-    return $self->{'_count'}
+    my ($self, @args) = @_;
+    $self->throw_not_implemented();
 }
 
 =head2 get_last_update
@@ -1018,9 +1014,8 @@ sub get_record_count {
 =cut
 
 sub get_last_update {
-    my $self = shift;
-    $self->parse_data unless $self->data_parsed;
-    return $self->{'_lastupdate'}
+    my ($self, @args) = @_;
+    $self->throw_not_implemented();
 }
 
 =head2 get_menu_name
@@ -1035,11 +1030,8 @@ sub get_last_update {
 =cut
 
 sub get_menu_name {
-    my $self = shift;
-    $self->parse_data unless $self->data_parsed;
-    exists $self->{'_menuname'} ? return $self->{'_menuname'} :
-    exists $self->{'_menu'} ? return $self->{'_menu'} :
-    return;
+    my ($self, @args) = @_;
+    $self->throw_not_implemented();
 }
 
 =head2 get_description
@@ -1054,9 +1046,8 @@ sub get_menu_name {
 =cut
 
 sub get_description {
-    my $self = shift;
-    $self->parse_data unless $self->data_parsed;
-    return $self->{'_description'};
+    my ($self, @args) = @_;
+    $self->throw_not_implemented();
 }
 
 =head2 next_FieldInfo
@@ -1073,10 +1064,7 @@ sub get_description {
 
 sub next_FieldInfo {
     my $self = shift;
-    $self->parse_data unless $self->data_parsed;
-    $self->{'_fieldinfo_it'} = $self->generate_iterator('fieldinfo')
-        if (!exists $self->{'_fieldinfo_it'});
-    $self->{'_fieldinfo_it'}->();
+    $self->throw_not_implemented();
 }
 
 =head2 get_FieldInfo
@@ -1091,9 +1079,8 @@ sub next_FieldInfo {
 =cut
 
 sub get_FieldInfo {
-    my $self = shift;
-    $self->parse_data unless $self->data_parsed;
-    return ref $self->{'_fieldinfo'} ? @{ $self->{'_fieldinfo'} } : return ();
+    my ($self, @args) = @_;
+    $self->throw_not_implemented();
 }
 
 *get_FieldInfos = \&get_FieldInfo;
@@ -1112,10 +1099,7 @@ sub get_FieldInfo {
 
 sub next_LinkInfo {
     my $self = shift;
-    $self->parse_data unless $self->data_parsed;
-    $self->{'_linkinfo_it'} = $self->generate_iterator('linkinfo')
-        if (!exists $self->{'_linkinfo_it'});
-    $self->{'_linkinfo_it'}->();
+    $self->throw_not_implemented();
 }
 
 =head2 get_LinkInfo
@@ -1131,8 +1115,7 @@ sub next_LinkInfo {
 
 sub get_LinkInfo {
     my $self = shift;
-    $self->parse_data unless $self->data_parsed;
-    return ref $self->{'_linkinfo'} ? @{ $self->{'_linkinfo'} } : return ();
+    $self->throw_not_implemented();
 }
 
 *get_LinkInfos = \&get_LinkInfo;
@@ -1158,7 +1141,7 @@ sub get_LinkInfo {
 
 sub print_FieldInfo {
     my ($self, @args) = @_;
-    $self->_print_handler(@args, -type => 'FieldInfo');
+    $self->throw_not_implemented();
 }
 
 =head2 print_LinkInfo
@@ -1182,7 +1165,7 @@ sub print_FieldInfo {
 
 sub print_LinkInfo {
     my ($self, @args) = @_;
-    $self->_print_handler(@args, -type => 'LinkInfo');
+    $self->throw_not_implemented();
 }
 
 =head1 Bio::Tools::EUtilities::Link-related methods

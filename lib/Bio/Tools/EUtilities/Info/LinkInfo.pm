@@ -69,7 +69,8 @@ sub new {
 =cut
 
 sub get_database {
-    return shift->{'_dbto'};
+    my $self = shift;
+    return ($self->{el}->findnodes('./DbTo'))[0]->to_literal();
 }
 
 =head2 get_db (alias for get_database)
@@ -99,7 +100,10 @@ sub get_dbto {
 
 =cut
 
-sub get_dbfrom { return shift->{'_dbfrom'} }
+sub get_dbfrom {
+    my $self = shift;
+    return ($self->{el}->findnodes('//DbInfo/DbName'))[0]->to_literal();
+}
 
 =head2 get_link_name
 
@@ -116,7 +120,7 @@ sub get_link_name {
     if ($self->eutil eq 'elink') {
         return $self->{'_linkname'}
     } else {
-        return $self->{'_name'}
+        return ($self->{el}->findnodes('./Name'))[0]->to_literal();
     }
 }
 
@@ -130,7 +134,10 @@ sub get_link_name {
 
 =cut
 
-sub get_link_description { return shift->{'_description'} }
+sub get_link_description {
+    my $self = shift;
+    return ($self->{el}->findnodes('./Description'))[0]->to_literal();
+}
 
 =head2 get_link_menu_name
 
@@ -144,7 +151,11 @@ sub get_link_description { return shift->{'_description'} }
 
 sub get_link_menu_name {
     my $self = shift;
-    return $self->eutil eq 'elink' ? $self->{'_menutag'} : $self->{'_menu'};
+    if ($self->eutil eq 'elink') {
+        return $self->{'_menutag'};
+    } else {
+        return ($self->{el}->findnodes('./MenuName'))[0]->to_literal();
+    }    
 }
 
 =head2 get_priority
@@ -190,8 +201,8 @@ sub get_url { return shift->{'_url'} }
 # private method
 
 sub _add_data {
-    my ($self, $simple) = @_;
-    map { $self->{'_'.lc $_} = $simple->{$_} unless ref $simple->{$_}} keys %$simple;
+    my ($self, $el) = @_;
+    $self->{el} =$el;
 }
 
 =head2 to_string

@@ -86,7 +86,10 @@ sub new {
 
 =cut
 
-sub get_term_count { return shift->{'_termcount'} }
+sub get_term_count {
+    my $self = shift;
+    return ($self->{el}->findnodes('./TermCount'))[0]->to_literal();
+}
 
 =head2 get_field_name
 
@@ -98,7 +101,10 @@ sub get_term_count { return shift->{'_termcount'} }
 
 =cut
 
-sub get_field_name { return shift->{'_fullname'} }
+sub get_field_name {
+    my $self = shift;
+    return ($self->{el}->findnodes('./FullName'))[0]->to_literal();
+}
 
 =head2 get_full_name
 
@@ -119,7 +125,10 @@ sub get_field_name { return shift->{'_fullname'} }
 
 =cut
 
-sub get_field_code { return shift->{'_name'} }
+sub get_field_code {
+    my $self = shift;
+    return ($self->{el}->findnodes('./Name'))[0]->to_literal();
+}
 
 =head2 get_field_description
 
@@ -132,7 +141,10 @@ sub get_field_code { return shift->{'_name'} }
 
 =cut
 
-sub get_field_description { return shift->{'_description'} }
+sub get_field_description {
+    my $self = shift;
+    return ($self->{el}->findnodes('./Description'))[0]->to_literal();
+}
 
 =head2 is_date
 
@@ -146,7 +158,8 @@ sub get_field_description { return shift->{'_description'} }
 
 sub is_date {
     my $self = shift;
-    ($self->{'_isdate'} && $self->{'_isdate'} eq 'Y') ? return 1 : return 0;
+    my $val = ($self->{el}->findnodes('./IsDate'))[0]->to_literal();
+    $val eq 'Y' ? return 1 : return 0;
 }
 
 =head2 is_singletoken
@@ -161,7 +174,8 @@ sub is_date {
 
 sub is_singletoken {
     my $self = shift;
-    ($self->{'_singletoken'} && $self->{'_singletoken'} eq 'Y') ? return 1 : return 0;
+    my $val = ($self->{el}->findnodes('./SingleToken'))[0]->to_literal();
+    $val eq 'Y' ? return 1 : return 0;
 }
 
 =head2 is_hierarchy
@@ -176,7 +190,8 @@ sub is_singletoken {
 
 sub is_hierarchy {
     my $self = shift;
-    ($self->{'hierarchy'} && $self->{'hierarchy'} eq 'Y') ? return 1 : return 0;
+    my $val = ($self->{el}->findnodes('./Hierarchy'))[0]->to_literal();
+    $val eq 'Y' ? return 1 : return 0;
 }
 
 =head2 is_hidden
@@ -191,7 +206,8 @@ sub is_hierarchy {
 
 sub is_hidden {
     my $self = shift;
-    ($self->{'_ishidden'} && $self->{'_ishidden'} eq 'Y') ? return 1 : return 0;
+    my $val = ($self->{el}->findnodes('./IsHidden'))[0]->to_literal();
+    $val eq 'Y' ? return 1 : return 0;
 }
 
 =head2 is_numerical
@@ -206,14 +222,15 @@ sub is_hidden {
 
 sub is_numerical {
     my $self = shift;
-    ($self->{'_isnumerical'} && $self->{'_isnumerical'} eq 'Y') ? return 1 : return 0;
+    my $val = ($self->{el}->findnodes('./IsNumerical'))[0]->to_literal();
+    $val eq 'Y' ? return 1 : return 0;
 }
 
 # private EUtilDataI method
 
 sub _add_data {
-    my ($self, $simple) = @_;
-    map { $self->{'_'.lc $_} = $simple->{$_} unless ref $simple->{$_}} keys %$simple;
+    my ($self, $el) = @_;
+    $self->{el} =$el;
 }
 
 =head2 to_string
