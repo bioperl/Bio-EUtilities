@@ -71,7 +71,8 @@ my %TYPE = (
 sub get_ids {
     my ($self, $request) = @_;
     $self->parse_data unless $self->data_parsed;
-    my @ids = ();
+    #print STDERR $self->{dom}->toString();
+    my @ids = map {$_->to_literal()} $self->{dom}->findnodes('//IdList/Id');
     return @ids
 }
 
@@ -100,18 +101,21 @@ sub get_databases {
     if (!$self->{dom}) {
         $self->throw("No XML document object found!")
     }
-    my @dbs = map {$_->to_literal()} $self->{dom}->findnodes('//Database');
-    #if ($eutil eq 'einfo' || $eutil eq 'espell') {
-    #    #@dbs = $self->{'_dbname'} ||
-    #    #$self->{'_database'} ||
-    #    #$self->get_available_databases;
-    #} elsif ($eutil eq 'egquery') {
-    #    # @dbs = map {$_->get_database} ($self->get_GlobalQueries);
-    #    @dbs = map {$_->to_literal()} $self->{dom}->findnodes('//Database');
-    #} else {
-    #    # only unique dbs
-    #    $self->die("Unsupported eutil: $eutil")
-    #}
+    my @dbs;
+    if ($eutil eq 'einfo' || $eutil eq 'espell') {
+        return ($self->{dom}->findnodes('//Database'))[0]->to_literal();
+        #@dbs = $self->{'_dbname'} ||
+        #$self->{'_database'} ||
+        #$self->get_available_databases;
+    } elsif ($eutil eq 'egquery') {
+        @dbs = map {$_->to_literal()} $self->{dom}->findnodes('//Database');
+    } elsif ( $eutil eq 'esearch') {
+        # get the database from the passed parameter
+        @dbs = $self->parameter_base() ? $self->parameter_base->db() : ();
+    } else {
+        # only unique dbs
+        $self->throw("Unsupported eutil: $eutil")
+    }
     return @dbs;
 }
 
@@ -134,8 +138,9 @@ sub get_databases {
 sub get_count {
     my ($self, $db) = @_;
     $self->parse_data unless $self->data_parsed;
+    my $eutil = $self->eutil();
     # egquery
-    if ($self->datatype eq 'multidbquery') {
+    if ($self->eutil eq 'egquery') {
         if (!$db) {
             $self->warn('Must specify database to get count from');
             return;
@@ -144,8 +149,10 @@ sub get_count {
         $gq && return $gq->get_count;
         $self->warn("Unknown database $db");
         return;
+    } elsif ($self->eutil eq 'esearch') {
+        return ($self->{dom}->findnodes('//Count'))[0]->to_literal();
     } else {
-        return $self->{'_count'} || scalar($self->get_ids);
+        return
     }
 }
 
@@ -166,10 +173,13 @@ sub get_count {
 sub get_term {
     my ($self, @args) = @_;
     $self->parse_data unless $self->data_parsed;
-    my $term = ($self->{dom}->findnodes('//Query'))[0]->to_literal();
-    #$self->{'_term'}  ? $self->{'_term'}  :
-    #$self->{'_query'} ? $self->{'_query'} :
-    #$self->parameter_base ? $self->parameter_base->term :
+    my $eutil = $self->eutil;
+    my $term;
+    if ($eutil eq 'esearch') {
+        $term = $self->parameter_base ? $self->parameter_base->term() : undef;
+    } elsif ($eutil eq 'espell') {
+        $term = ($self->{dom}->findnodes('//Query'))[0]->to_literal();
+    } 
     return $term;
 }
 
@@ -187,7 +197,11 @@ sub get_term {
 sub get_translation_from {
     my $self = shift;
     $self->parse_data unless $self->data_parsed;
-    return ($self->{dom}->findnodes('//Foo'))[0]->to_literal();
+    my $eutil = $self->eutil;
+    if ($eutil eq 'esearch') {
+        return ($self->{dom}->findnodes('//Translation/From'))[0]->to_literal();
+    }
+    return;
 }
 
 =head2 get_translation_to
@@ -204,7 +218,11 @@ sub get_translation_from {
 sub get_translation_to {
     my $self = shift;
     $self->parse_data unless $self->data_parsed;
-    return ($self->{dom}->findnodes('//CorrectedQuery'))[0]->to_literal();
+    my $eutil = $self->eutil;
+    if ($eutil eq 'esearch') {
+        return ($self->{dom}->findnodes('//Translation/To'))[0]->to_literal();
+    }
+    return;
 }
 
 =head2 get_retstart
@@ -223,7 +241,11 @@ sub get_translation_to {
 sub get_retstart {
     my $self = shift;
     $self->parse_data unless $self->data_parsed;
-    return $self->{'_retstart'};
+    my $eutil = $self->eutil;
+    if ($eutil eq 'esearch') {
+        return ($self->{dom}->findnodes('//RetStart'))[0]->to_literal();
+    }
+    return;
 }
 
 =head2 get_retmax
@@ -242,7 +264,11 @@ sub get_retstart {
 sub get_retmax {
     my $self = shift;
     $self->parse_data unless $self->data_parsed;
-    return $self->{'_retmax'};
+    my $eutil = $self->eutil;
+    if ($eutil eq 'esearch')  {
+        return ($self->{dom}->findnodes('//RetMax'))[0]->to_literal();
+    }
+    return;
 }
 
 =head2 get_query_translation
@@ -260,7 +286,12 @@ sub get_retmax {
 sub get_query_translation {
     my $self = shift;
     $self->parse_data unless $self->data_parsed;
-    return $self->{'_querytranslation'};
+    my $eutil = $self->eutil();
+    if ($eutil eq 'esearch') {
+        return ($self->{dom}->findnodes('//QueryTranslation'))[0]->to_literal();
+    } else {
+        return;
+    }
 }
 
 =head2 get_corrected_query
@@ -277,7 +308,12 @@ sub get_query_translation {
 sub get_corrected_query {
     my $self = shift;
     $self->parse_data unless $self->data_parsed;
-    return ($self->{dom}->findnodes('//CorrectedQuery'))[0]->to_literal();
+    my $eutil = $self->eutil();
+    if ($eutil eq 'espell') {
+        return ($self->{dom}->findnodes('//CorrectedQuery'))[0]->to_literal();
+    } else {
+        return;
+    }
 }
 
 =head2 get_replaced_terms
@@ -294,8 +330,12 @@ sub get_corrected_query {
 sub get_replaced_terms {
     my $self = shift;
     $self->parse_data unless $self->data_parsed;
-    my @terms = map {$_->to_literal()} $self->{dom}->findnodes('//SpelledQuery/Replaced');
-    return @terms;
+    my $eutil = $self->eutil();
+    if ($eutil eq 'espell') {
+        my @terms = map {$_->to_literal()} $self->{dom}->findnodes('//SpelledQuery/Replaced');
+        return @terms;
+    }
+    return;
 }
 
 =head2 next_GlobalQuery
