@@ -67,7 +67,7 @@ my %MODE = (
     'einfo'     => {
         'mode'     => ['GET'],
         'location' => 'einfo.fcgi',
-        'params'   => [qw(db tool email api_key)],
+        'params'   => [qw(db tool email api_key version)],
                    },
     'epost'     => {
         'mode'     => ['POST','GET'],
