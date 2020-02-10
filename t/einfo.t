@@ -1,14 +1,24 @@
-# -*-Perl-*- Test Harness script for Bioperl
-# $Id: einfo.t 15112 2008-12-08 18:12:38Z sendu $
-#
-
 use strict;
 use warnings;
 
 use Test::More tests => 49;
-use inc::TestHelper qw(test_input_file);
-
+use Bio::Root::Test;
 use Bio::Tools::EUtilities;
+
+use Bio::DB::EUtilities;
+
+if ($ENV{EUTILS_UPDATE}) {
+    # use this to generate an updated XML and dump to base directory
+    # Note this is API v1 only for einfo
+    my $factory = Bio::DB::EUtilities->new(-eutil => 'einfo',
+                                           -email => $ENV{BIOPERL_EMAIL});
+    $factory->get_Response(-file => 'einfo_dbs.xml');
+    $factory = Bio::DB::EUtilities->new(-eutil => 'einfo',
+                                        -db    => 'pubmed',
+                                        -email => $ENV{BIOPERL_EMAIL});
+    $factory->get_Response(-file => 'einfo.xml');
+    exit();
+}
 
 ## einfo (no dbs)
 my $eutil = Bio::Tools::EUtilities->new(

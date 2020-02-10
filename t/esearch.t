@@ -5,11 +5,26 @@
 use strict;
 use warnings;
 
-use Test::More tests => 31;
-
 use Bio::Tools::EUtilities;
 use Bio::Tools::EUtilities::EUtilParameters;
 use Bio::Root::Test;
+use Bio::DB::EUtilities;
+
+if ($ENV{EUTILS_UPDATE}) {
+    # use this to generate an updated XML and dump to base directory
+    my $factory = Bio::DB::EUtilities->new(-term      => 'Notch AND Mus musculus',
+                                           -eutil     => 'esearch',
+                                           -database  => 'protein',
+                                           -email     => $ENV{BIOPERL_EMAIL});
+    $factory->get_Response(-file => 'esearch1.xml');
+    
+    # TODO: needs a history (epost)
+    #$factory = Bio::DB::EUtilities->new(-query => 'Notch AND Mus musculus',
+    #                                       -eutil => 'esearch',
+    #                                       -email => $ENV{BIOPERL_EMAIL});
+    #$factory->get_Response(-file => 'esearch1.xml');
+    exit();
+}
 
 my @ids = qw(6679096 31543332 134288853 483581 20805941 187951953 169158074
 123228044 148676374 114326469 148707003 187952787 123233807 148694865 148694864
@@ -88,4 +103,6 @@ is($eutil->get_corrected_query, undef ,'get_corrected_query');
 is($eutil->get_replaced_terms, undef ,'get_replaced_terms');
 
 my @qs = $eutil->get_GlobalQueries;
-is(scalar(@qs), 0, 'get_GlobalQueries')
+is(scalar(@qs), 0, 'get_GlobalQueries');
+
+done_testing();

@@ -6,9 +6,18 @@ use strict;
 use warnings;
 
 use Test::More tests => 18;
-use inc::TestHelper qw(test_input_file);
-
+use Bio::Root::Test;
 use Bio::Tools::EUtilities;
+use Bio::DB::EUtilities;
+
+if ($ENV{EUTILS_UPDATE}) {
+    # use this to generate an updated XML and dump to base directory
+    my $factory = Bio::DB::EUtilities->new(-query => 'Notch AND Mus musculus',
+                                           -eutil => 'egquery',
+                                           -email => $ENV{BIOPERL_EMAIL});
+    $factory->get_Response(-file => 'egquery.xml');
+    exit();
+}
 
 # Normal esearch
 my $eutil = Bio::Tools::EUtilities->new(
