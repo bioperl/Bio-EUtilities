@@ -106,17 +106,12 @@ sub parse_data {
     #delete $self->{'_response'} unless $self->cache_response;
 
     # History
-    if ($eutil eq 'egquery') {
-        my $hist;
-        eval {
-            my @hist = $dom->findnodes('//WebEnv'));
-        };
-        if (!$@) {
-            my $cookie = Bio::Tools::EUtilities::History->new(-eutil => $eutil,
-                                -verbose => $self->verbose);
-            $cookie->_add_data($dom);
-            push @{$self->{'_histories'}}, $cookie;
-        }
+    my $hist;
+    if ($dom->exists( '//WebEnv' )) {
+        my $cookie = Bio::Tools::EUtilities::History->new(-eutil => $eutil,
+                            -verbose => $self->verbose);
+        $cookie->_add_data($dom);
+        push @{$self->{'_histories'}}, $cookie;
     }
     
     # GlobalQuery; we pass in the DOM elements

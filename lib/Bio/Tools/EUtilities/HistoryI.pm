@@ -54,11 +54,6 @@ Bio::Tools::EUtilities::LinkSet (elink), which also implement HistoryI.
 sub history {
     my $self = shift;
     $self->parse_data if ($self->can('parse_data') && !$self->data_parsed);
-    if (@_) {
-        my ($webenv, $querykey) = (shift, shift);
-        $self->throw("Missing part of cookie!") if (!$webenv || !$querykey);
-        ($self->{'_webenv'}, $self->{'_querykey'}) = ($webenv, $querykey);
-    }
     return ($self->get_webenv, $self->get_query_key);
 }
 
@@ -76,7 +71,7 @@ sub history {
 sub get_webenv {
     my $self = shift;
     $self->parse_data if ($self->can('parse_data') && !$self->data_parsed);
-    return $self->{'_webenv'};
+    return ($self->{el}->findnodes('.//WebEnv'))[0]->to_literal();
 }
 
 =head2 get_query_key
@@ -92,7 +87,7 @@ sub get_webenv {
 sub get_query_key {
     my $self = shift;
     $self->parse_data if ($self->can('parse_data') && !$self->data_parsed);
-    return $self->{'_querykey'};
+    return ($self->{el}->findnodes('.//QueryKey'))[0]->to_literal();
 }
 
 1;

@@ -84,13 +84,14 @@ sub new {
 =cut
 
 sub _add_data {
-    my ($self, $simple) = @_;
-    if (!exists $simple->{WebEnv} || !exists $simple->{QueryKey}) {
-        $self->debug("Data:",Dumper($simple));
-        $self->throw("Missing webenv/query key in history output");
-    }
-    $self->{_webenv} = $simple->{WebEnv} && delete $simple->{WebEnv};
-    $self->{_querykey} = $simple->{QueryKey} && delete $simple->{QueryKey};
+    my ($self, $dom) = @_;
+    #if (!exists $simple->{WebEnv} || !exists $simple->{QueryKey}) {
+    #    $self->debug("Data:",Dumper($simple));
+    #    $self->throw("Missing webenv/query key in history output");
+    #}
+    $self->{el} = $dom;
+    #$self->{_webenv} = $simple->{WebEnv} && delete $simple->{WebEnv};
+    #$self->{_querykey} = $simple->{QueryKey} && delete $simple->{QueryKey};
 }
 
 =head2 to_string

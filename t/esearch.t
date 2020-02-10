@@ -76,13 +76,13 @@ $eutil = Bio::Tools::EUtilities->new(
 
 is ($eutil->get_count, 534, 'get_count');
 $history = $eutil->next_History;
-#isa_ok($history, 'bio::tools::eutilities::historyi');
-#is($history->get_webenv,
-#   '00m7ejh8lyg3wic2se2hd7im_w5o3z3q4_jk9-rn266ix_erxkjnoyqxhp@03f17619941cfd71_0005sid',
-#   'get_webenv');
-#is($history->get_query_key, 1, 'get_query_key');
-#is(join(',',$history->history),
-#   '00m7ejh8lyg3wic2se2hd7im_w5o3z3q4_jk9-rn266ix_erxkjnoyqxhp@03f17619941cfd71_0005sid,1', 'history');
+isa_ok($history, 'Bio::Tools::EUtilities::HistoryI');
+is($history->get_webenv,
+   '00m7eJh8lyG3wiC2SE2hd7Im_w5o3z3q4_JK9-Rn266ix_eRXkjNOYQxHp@03F17619941CFD71_0005SID',
+   'get_webenv');
+is($history->get_query_key, 1, 'get_query_key');
+is(join(',',$history->history),
+   '00m7eJh8lyG3wiC2SE2hd7Im_w5o3z3q4_JK9-Rn266ix_eRXkjNOYQxHp@03F17619941CFD71_0005SID,1', 'history');
 
 @ids2 = $eutil->get_ids;
 is_deeply(\@ids2, \@ids, 'get_ids');
