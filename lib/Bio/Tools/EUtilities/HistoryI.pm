@@ -71,7 +71,10 @@ sub history {
 sub get_webenv {
     my $self = shift;
     $self->parse_data if ($self->can('parse_data') && !$self->data_parsed);
-    return ($self->{el}->findnodes('.//WebEnv'))[0]->to_literal();
+    if ($self->_node->exists('.//WebEnv')) {
+        return ($self->_node->findnodes('.//WebEnv'))[0]->to_literal();
+    }
+    return
 }
 
 =head2 get_query_key
@@ -87,7 +90,10 @@ sub get_webenv {
 sub get_query_key {
     my $self = shift;
     $self->parse_data if ($self->can('parse_data') && !$self->data_parsed);
-    return ($self->{el}->findnodes('.//QueryKey'))[0]->to_literal();
+    if ($self->_node->exists('.//QueryKey')) {
+        return ($self->_node->findnodes('.//QueryKey'))[0]->to_literal();
+    }
+    return;
 }
 
 1;

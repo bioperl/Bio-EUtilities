@@ -6,7 +6,14 @@ use warnings;
 use Test::More tests => 84;
 
 use Bio::Tools::EUtilities;
-use inc::TestHelper qw(test_input_file);
+use Bio::Root::Test;
+use Bio::DB::EUtilities;
+
+if ($ENV{EUTILS_UPDATE}) {
+    # use this to generate an updated XML and dump to base directory
+    # TODO: add in updated searches
+    exit();
+}
 
 # check -correspondence => 0 (default) - this is set up to return the
 # exact same thing as correspondece = 1, tested below)

@@ -116,10 +116,6 @@ sub datatype {
 
 =cut
 
-sub rewind {
-    shift->warn("Object may not need an iterator.  Please check the documentation.");
-}
-
 =head2 _add_data
 
  Title    : _add_data
@@ -164,5 +160,26 @@ sub _text_wrap {
     shift;
     return wrap(@_);
 }
+
+=head2 _node (experimental)
+
+ Title    : node
+ Usage    : $foo->node()
+ Function : Get/Set XML::LibXML::Node implementation (generally a DOM or element) (experimental)
+ Returns  : XML::LibXML element
+ Args     : XML::LibXML element (optional)
+ Note     : This is a highly experimental interface and may change substantially. You have been warned
+
+=cut
+
+sub _node {
+    my ($self, $node) = @_;
+    if ($node) {
+        $self->{'_node'} = $node;
+    }
+    return $self->{'_node'};
+}
+
+
 
 1;

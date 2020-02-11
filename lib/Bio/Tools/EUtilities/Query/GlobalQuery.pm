@@ -69,7 +69,7 @@ sub get_term {
 
 sub get_database {
     my ($self) = @_;
-    return ($self->{el}->findnodes('.//DbName'))[0]->to_literal();
+    return ($self->_node->findnodes('.//DbName'))[0]->to_literal();
 }
 
 =head2 get_count
@@ -84,7 +84,7 @@ sub get_database {
 
 sub get_count {
     my ($self) = @_;
-    return ($self->{el}->findnodes('.//Count'))[0]->to_literal();
+    return ($self->_node->findnodes('.//Count'))[0]->to_literal();
 }
 
 =head2 get_status
@@ -99,7 +99,7 @@ sub get_count {
 
 sub get_status {
     my ($self) = @_;
-    return ($self->{el}->findnodes('.//Status'))[0]->to_literal();
+    return ($self->_node->findnodes('.//Status'))[0]->to_literal();
 }
 
 =head2 get_menu_name
@@ -114,13 +114,13 @@ sub get_status {
 
 sub get_menu_name {
     my $self = shift;
-    return ($self->{el}->findnodes('.//MenuName'))[0]->to_literal();
+    return ($self->_node->findnodes('.//MenuName'))[0]->to_literal();
 }
 
 # private method
 sub _add_data {
     my ($self, $data) = @_;
-    $self->{el} = $data;
+    $self->_node($data);
 }
 
 =head2 to_string

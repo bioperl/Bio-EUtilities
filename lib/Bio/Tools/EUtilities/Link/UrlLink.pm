@@ -28,7 +28,14 @@ use base qw(Bio::Root::Root Bio::Tools::EUtilities::EUtilDataI);
 
 =cut
 
-sub get_dbfrom { return shift->{'_dbfrom'}; }
+sub get_dbfrom { 
+    my $self = shift;
+    if ( $self->_node->exists("//DbFrom") ) {
+        my @dbs = map { $_->to_literal() } $self->_node->findnodes("//DbFrom");
+        return shift @dbs;
+    }
+    return;
+}
 
 =head2 get_attribute
 
@@ -40,7 +47,14 @@ sub get_dbfrom { return shift->{'_dbfrom'}; }
 
 =cut
 
-sub get_attribute { return shift->{'_attribute'}; }
+sub get_attribute { 
+    my $self = shift;
+    if ( $self->_node->exists("./Attribute") ) {
+        my @att = map { $_->to_literal() } $self->_node->findnodes("./Attribute");
+        return shift @att;
+    }
+    return
+}
 
 =head2 get_icon_url
 
@@ -52,7 +66,14 @@ sub get_attribute { return shift->{'_attribute'}; }
 
 =cut
 
-sub get_icon_url { return shift->{'_iconurl'}; }
+sub get_icon_url { 
+    my $self = shift;
+    if ( $self->_node->exists("./IconUrl") ) {
+        my @urls = map { $_->to_literal() } $self->_node->findnodes("./IconUrl");
+        return shift @urls;
+    }
+    return
+}
 
 =head2 get_subject_type
 
@@ -64,7 +85,14 @@ sub get_icon_url { return shift->{'_iconurl'}; }
 
 =cut
 
-sub get_subject_type { return shift->{'_subjecttype'}; }
+sub get_subject_type { 
+    my $self = shift;
+    if ( $self->_node->exists("./SubjectType") ) {
+        my @subj = map { $_->to_literal() } $self->_node->findnodes("./SubjectType");
+        return shift @subj;
+    }
+    return
+}
 
 =head2 get_url
 
@@ -78,11 +106,16 @@ sub get_subject_type { return shift->{'_subjecttype'}; }
 
 sub get_url {
     my $self = shift;
-    # fix Entrz LinkOut URLS without the full URL
-    if ($self->{'_url'} && $self->{'_url'} =~ m{^/}) {
-        $self->{'_url'} = 'https://www.ncbi.nih.gov'.$self->{'_url'};
+    if ( $self->_node->exists("./Url") ) {
+        my @urls = map { $_->to_literal() } $self->_node->findnodes("./Url");
+        return shift @urls;
     }
-    return $self->{'_url'};
+    return
+    # fix Entrz LinkOut URLS without the full URL
+    # if ($self->{'_url'} && $self->{'_url'} =~ m{^/}) {
+    #     $self->{'_url'} = 'https://www.ncbi.nih.gov'.$self->{'_url'};
+    # }
+    # return $self->{'_url'};
 }
 
 =head2 get_link_name
@@ -95,7 +128,14 @@ sub get_url {
 
 =cut
 
-sub get_link_name { return shift->{'_linkname'};  }
+sub get_link_name { 
+    my $self = shift;
+    if ( $self->_node->exists("./LinkName") ) {
+        my @ln = map { $_->to_literal() } $self->_node->findnodes("./LinkName");
+        return shift @ln;
+    }
+    return
+}
 
 =head2 get_provider_name
 
@@ -107,7 +147,14 @@ sub get_link_name { return shift->{'_linkname'};  }
 
 =cut
 
-sub get_provider_name { return shift->{'_provider_name'}; }
+sub get_provider_name { 
+    my $self = shift;
+    if ( $self->_node->exists("./Provider/Name") ) {
+        my @prov = map { $_->to_literal() } $self->_node->findnodes("./Provider/Name");
+        return shift @prov;
+    }
+    return
+}
 
 =head2 get_provider_abbr
 
@@ -119,7 +166,14 @@ sub get_provider_name { return shift->{'_provider_name'}; }
 
 =cut
 
-sub get_provider_abbr { return shift->{'_provider_nameabbr'}; }
+sub get_provider_abbr { 
+    my $self = shift;
+    if ( $self->_node->exists("./Provider/NameAbbr") ) {
+        my @prov = map { $_->to_literal() } $self->_node->findnodes("./Provider/NameAbbr");
+        return shift @prov;
+    }
+    return
+}
 
 =head2 get_provider_id
 
@@ -131,7 +185,14 @@ sub get_provider_abbr { return shift->{'_provider_nameabbr'}; }
 
 =cut
 
-sub get_provider_id { return shift->{'_provider_id'}[0]; }
+sub get_provider_id { 
+    my $self = shift;
+    if ( $self->_node->exists("./Provider/Id") ) {
+        my @id = map { $_->to_literal() } $self->_node->findnodes("./Provider/Id");
+        return shift @id;
+    }
+    return
+}
 
 =head2 get_provider_icon_url
 
@@ -143,7 +204,14 @@ sub get_provider_id { return shift->{'_provider_id'}[0]; }
 
 =cut
 
-sub get_provider_icon_url { return shift->{'_provider_iconurl'}; }
+sub get_provider_icon_url { 
+    my $self = shift;
+    if ( $self->_node->exists("./Provider/IconUrl") ) {
+        my @url = map { $_->to_literal() } $self->_node->findnodes("./Provider/IconUrl");
+        return shift @url;
+    }
+    return
+}
 
 =head2 get_provider_url
 
@@ -155,18 +223,26 @@ sub get_provider_icon_url { return shift->{'_provider_iconurl'}; }
 
 =cut
 
-sub get_provider_url { return shift->{'_provider_url'}; }
+sub get_provider_url { 
+    my $self = shift;
+    if ( $self->_node->exists("./Provider/Url") ) {
+        my @url = map { $_->to_literal() } $self->_node->findnodes("./Provider/Url");
+        return shift @url;
+    }
+    return
+}
 
 # private method
 
 sub _add_data {
     my ($self, $data) = @_;
-    if (exists $data->{Provider}) {
-        map {$self->{'_provider_'.lc $_} = $data->{Provider}->{$_};
-            } keys %{$data->{Provider}};
-        delete $data->{Provider};
-    }
-    map {$self->{'_'.lc $_} = $data->{$_} if $data->{$_}} keys %$data;
+    $self->{_node} = $data;
+    # if (exists $data->{Provider}) {
+    #     map {$self->{'_provider_'.lc $_} = $data->{Provider}->{$_};
+    #         } keys %{$data->{Provider}};
+    #     delete $data->{Provider};
+    # }
+    # map {$self->{'_'.lc $_} = $data->{$_} if $data->{$_}} keys %$data;
 }
 
 =head2 to_string

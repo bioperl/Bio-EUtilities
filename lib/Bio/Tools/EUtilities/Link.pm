@@ -22,62 +22,131 @@ that specifically handles NCBI elink-related data.
 
 =cut
 
+=head2 get_ids
+
+ Title    : get_ids
+ Usage    : my @ids = $parser->get_ids
+ Function : returns array of requested IDs (see Notes for more specifics)
+ Returns  : array
+ Args     : [conditional] not required except when running elink queries against
+            multiple databases. In case of the latter, the database name is
+            optional but recommended when retrieving IDs as the ID list will
+            be globbed together. In such cases, if a db name isn't provided a
+            warning is issued as a reminder.
+ Notes    : esearch    : returned ID list
+            elink      : returned ID list (see Args above for caveats)
+            all others : from parameter_base->id or undef
+
+=cut
+
+sub get_ids {
+    my ($self, $request) = @_;
+    $self->parse_data unless $self->data_parsed;
+    my @ids = map {$_->to_literal()} $self->_node->findnodes('//IdUrlSet/Id');
+    return @ids
+}
+
+=head2 get_databases
+
+ Title    : get_databases
+ Usage    : my @dbs = $parser->get_databases
+ Function : returns list of databases
+ Returns  : array of strings
+ Args     : none
+ Notes    : This is guaranteed to return a list of databases. For a single
+            database use the convenience method get_db/get_database
+
+            egquery    : list of all databases in the query
+            einfo      : the queried database, or the available databases
+            espell     : the queried database
+            elink      : collected from each LinkSet
+            all others : from parameter_base->db or undef
+
+=cut
+
+sub get_databases {
+    my ($self) = @_;
+    $self->parse_data() unless $self->data_parsed();
+    my $eutil = $self->eutil();
+    my @dbs = map {$_->to_literal()} $self->_node->findnodes('//DbName');
+    return @dbs ;
+}
 
 # private EUtilDataI method
 
 {
-    my %SUBCLASS = (
-                    'LinkSetDb' => 'dblink',
-                    'LinkSetDbHistory' => 'history',
-                    'IdUrlList' => 'urllink',
-                    'IdCheckList' => 'idcheck',
-                    'NoLinks' => 'nolinks',
-                    );
+    # my %SUBCLASS = (
+    #                 'LinkSetDb' => 'dblink',
+    #                 'LinkSetDbHistory' => 'history',
+    #                 'IdUrlSet' => 'urllink',
+    #                 'IdCheckList' => 'idcheck',
+    #                 'NoLinks' => 'nolinks',
+    #                 );
 
-sub _add_data {
-    my ($self, $data) = @_;
+sub parse_data {
+    my $self = shift;
+    # TODO: subclass the other utils, remove lots of if/elsif cruft
+    # TDOD: move partial implementation (common code) into parent class
+    return if $self->data_parsed();
+    my $eutil = $self->eutil();
+    my $xp = XML::LibXML->new();
+    my $dom = $self->response  ? $xp->load_xml(string => $self->response->content) :
+                   $self->_fh  ? $xp->load_xml(IO => $self->_fh)      :
+        $self->throw('No response or stream specified');
+    
+    # Cache DOM
+    $self->{_node} = $dom;
+    $self->{'_parsed'} = 1;
+    
     # divide up per linkset
-    if (!exists $data->{LinkSet}) {
-        $self->warn("No linksets returned");
-        return;
-    }
-    for my $ls (@{ $data->{LinkSet} }) {
-        my $subclass;
-        # attempt to catch linkset errors
-        if (exists $ls->{ERROR}) {
-            my ($error, $dbfrom) = ($ls->{ERROR},$ls->{DbFrom});
-            $self->warn("NCBI LinkSet error: $dbfrom: $error\n");
-            # try to save the rest of the data, if any
-            next;
-        }
-        # caching for efficiency; no need to recheck
-        if (!exists $self->{'_subclass_type'}) {
-            ($subclass) = grep { exists $ls->{$_} } qw(LinkSetDb LinkSetDbHistory IdUrlList IdCheckList);
-            $subclass ||= 'NoLinks';
-            $self->{'_subclass_type'} = $subclass;
-        } else {
-            $subclass = $self->{'_subclass_type'};
-        }
-        # split these up by ID, since using correspondence() clobbers them...
-        if ($subclass eq 'IdUrlList' || $subclass eq 'IdCheckList') {
-            my $list = $subclass eq 'IdUrlList' ? 'IdUrlSet' :
-                $subclass eq 'IdCheckList' && exists $ls->{$subclass}->{IdLinkSet} ? 'IdLinkSet' :
-                'Id';
-            $ls->{$subclass} = $ls->{$subclass}->{$list};
-        }
-        # divide up linkset per link
-        for my $ls_sub (@{ $ls->{$subclass} }) {
-            for my $key (qw(WebEnv DbFrom IdList)) {
-                $ls_sub->{$key} = $ls->{$key} if exists $ls->{$key};
+    #if (!exists $data->{LinkSet}) {
+    #    $self->warn("No linksets returned");
+    #    return;
+    #}
+    if ($dom->exists('/eLinkResult/LinkSet')) {
+        # kind of LinkSet do we have?
+        
+        for my $el ($dom->findnodes('/eLinkResult/LinkSet')) {
+            
+#            print STDERR "Names: ".join(',', map {$_->nodeName} @childnodes)."\n";
+            my $subclass;
+            # attempt to catch linkset errors
+            #if (exists $ls->{ERROR}) {
+            #    my ($error, $dbfrom) = ($ls->{ERROR},$ls->{DbFrom});
+            #    $self->warn("NCBI LinkSet error: $dbfrom: $error\n");
+            #    # try to save the rest of the data, if any
+            #    next;
+            #}
+            # caching for efficiency; no need to recheck
+            if (!exists $self->{'_subclass_type'}) {
+                ($subclass) = grep { $el->exists(".//$_") } qw(LinkSetDb LinkSetDbHistory IdUrlSet IdCheckList);
+                $subclass ||= 'NoLinks';
+                $self->{'_subclass_type'} = $subclass;
+            } else {
+                $subclass = $self->{'_subclass_type'};
             }
-            my $obj = Bio::Tools::EUtilities::Link::LinkSet->new(-eutil => 'elink',
-                                                    -datatype => $SUBCLASS{$subclass},
-                                                    -verbose => $self->verbose);
-            $obj->_add_data($ls_sub);
-            push @{$self->{'_linksets'}}, $obj;
-            # push only potential history-carrying objects into history queue
-            if ($subclass eq 'LinkSetDbHistory') {
-                push @{$self->{'_histories'}}, $obj;
+            # split these up by ID, since using correspondence() clobbers them...
+            if ($subclass eq 'IdUrlList' || $subclass eq 'IdCheckList') {
+                #my $list = $subclass eq 'IdUrlList' ? 'IdUrlSet' :
+                #    $subclass eq 'IdCheckList' && exists $ls->{$subclass}->{IdLinkSet} ? 'IdLinkSet' :
+                #    'Id';
+                #$ls->{$subclass} = $ls->{$subclass}->{$list};
+            }
+            # divide up linkset per link
+            #print STDERR "XPath:.//$subclass\n";
+            for my $ls_sub ($el->findnodes(".//$subclass")) {
+                #for my $key (qw(WebEnv DbFrom IdList)) {
+                #    $ls_sub->{$key} = $ls->{$key} if exists $ls->{$key};
+                #}
+                my $obj = Bio::Tools::EUtilities::Link::LinkSet->new(-eutil => 'elink',
+                                                        -datatype => $subclass,
+                                                        -verbose => $self->verbose);
+                $obj->_add_data($ls_sub);
+                push @{$self->{'_linksets'}}, $obj;
+                # push only potential history-carrying objects into history queue
+                if ($subclass eq 'LinkSetDbHistory') {
+                    push @{$self->{'_histories'}}, $obj;
+                }
             }
         }
     }

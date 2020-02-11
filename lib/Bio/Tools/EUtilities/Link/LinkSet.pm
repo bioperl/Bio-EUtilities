@@ -53,14 +53,18 @@ sub new {
 
 sub get_ids {
     my $self = shift;
-    unless ($self->{'_sorted_id'}) {
-        @{$self->{'_sorted_id'}} =
-            sort {
-                $self->{'_id'}->{$a}->[0] <=>
-                $self->{'_id'}->{$b}->[0]
-            } keys %{$self->{'_id'}};
+    my $datatype = $self->datatype;
+    if ($datatype eq 'IdUrlSet') {
+        return $self->get_submitted_ids();
     }
-    return @{$self->{'_sorted_id'}};
+    # unless ($self->{'_sorted_id'}) {
+    #     @{$self->{'_sorted_id'}} =
+    #         sort {
+    #             $self->{'_id'}->{$a}->[0] <=>
+    #             $self->{'_id'}->{$b}->[0]
+    #         } keys %{$self->{'_id'}};
+    # }
+    # return @{$self->{'_sorted_id'}};
 }
 
 =head2 get_database
@@ -111,11 +115,16 @@ sub get_dbto {
 
 sub get_databases {
     my $self = shift;
-    my %tmp;
-    my @dbs = sort map {$_->get_database}
-        grep {!$tmp{$_->get_database}++} ($self->get_LinkInfo);
-    unshift @dbs, $self->{'_dbto'} if $self->{'_dbto'} && !$tmp{$self->{'_dbto'}}++;
-    return @dbs;
+    if ( $self->_node->exists(".//Db") ) {
+        my @dbs = map { $_->to_literal() } $self->_node->findnodes(".//Db");
+        return @dbs;
+    }
+    return ();
+    # my %tmp;
+    # my @dbs = sort map {$_->get_database}
+    #     grep {!$tmp{$_->get_database}++} ($self->get_LinkInfo);
+    # unshift @dbs, $self->{'_dbto'} if $self->{'_dbto'} && !$tmp{$self->{'_dbto'}}++;
+    # return @dbs;
 }
 
 =head2 get_dbs (alias for get_databases)
@@ -136,7 +145,14 @@ sub get_dbs {
 
 =cut
 
-sub get_dbfrom { return shift->{'_dbfrom'} }
+sub get_dbfrom { 
+    my $self = shift;
+    if ( $self->_node->exists("//DbFrom") ) {
+        my @dbs = map { $_->to_literal() } $self->_node->findnodes("//DbFrom");
+        return shift @dbs;
+    }
+    return;
+}
 
 =head2 get_link_names
 
@@ -191,10 +207,12 @@ sub get_link_name {
 sub get_submitted_ids {
     my $self = shift;
     my $datatype = $self->datatype;
-    if ($datatype eq 'idcheck' || $datatype eq 'urllink') {
-        return $self->get_ids;
-    } elsif ($self->{'_submitted_ids'}) {
-        return @{$self->{'_submitted_ids'}};
+    # if ($datatype eq 'idcheck' || $datatype eq 'urllink') {
+    #     return $self->get_ids;
+    # } els
+    if ( $self->_node->exists("./Id") ) {
+        my @ids = map { $_->to_literal() } $self->_node->findnodes("./Id");
+        return @ids;
     } else {
         return ();
     }
@@ -395,82 +413,86 @@ sub get_LinkInfo {
 
 {
     my %DATA_HANDLER = (
-        'IdList' => \&_add_submitted_ids,
-        'Id'     => \&_add_retrieved_ids,
+        # 'IdList' => \&_add_submitted_ids,
+        # 'Id'     => \&_add_retrieved_ids,
         'LinkInfo' => \&_add_linkinfo,
-        'Link'   => \&_add_retrieved_ids,
+        # 'Link'   => \&_add_retrieved_ids,
         'ObjUrl' => \&_add_objurls,
         );
 
 sub _add_data {
     my ($self, $data) = @_;
+    
+    $self->{_node} = $data;
     for my $key (qw(IdList Link Id ObjUrl LinkInfo)) {
-        next if !exists $data->{$key};
-        my $handler = $DATA_HANDLER{$key};
-        $self->$handler($data);
-        delete $data->{$key};
+       next if !($data->exists("//$key")) or !exists($DATA_HANDLER{$key});
+       my $handler = $DATA_HANDLER{$key};
+       $self->$handler($data);
     }
     # map the rest
-    if ($self->datatype eq 'idcheck' && exists $data->{content}) {
-        %{$self->{'_id'} } = ($data->{content} => [1]);
-        delete $data->{content}
-    }
-    map {$self->{'_'.lc $_} = $data->{$_}} keys %$data;
+    # if ($self->datatype eq 'idcheck' && exists $data->{content}) {
+    #    %{$self->{'_id'} } = ($data->{content} => [1]);
+       # delete $data->{content}
+    # }
+    # map {$self->{'_'.lc $_} = $data->{$_}} keys %$data;
 }
 
 }
 
 sub _add_submitted_ids {
-    my ($self, $data) = @_;
-    if (exists $data->{IdList}->{Id}) {
-        @{$self->{'_submitted_ids'}} = @{$data->{IdList}->{Id}} ;
-    }
+   my ($self, $data) = @_;
+   if (exists $data->{IdList}->{Id}) {
+       @{$self->{'_submitted_ids'}} = @{$data->{IdList}->{Id}} ;
+   }
 }
 
 sub _add_retrieved_ids {
-    my ($self, $data) = @_;
-    # map all IDs to deal with possible scores
-    # ID => {'count' = POSITION, 'score' => SCORE}
-    if (exists $data->{Link}) {
-        my $ct = 0;
-        for my $link (@{$data->{Link}}) {
-            if (exists $link->{Score}) {
-                $self->{'_has_scores'}++;
-                $self->{'_id'}->{$link->{Id}->[0]} = [ $ct++,$link->{Score}];
-            } else {
-                $self->{'_id'}->{$link->{Id}->[0]} = [ $ct++ ];
-            }
-        }
-    }
-    elsif (exists $data->{Id}) { # urls
-        %{$self->{'_id'} } = ($data->{Id}->[0] => [1]);
-    }
+   my ($self, $data) = @_;
+   # map all IDs to deal with possible scores
+   # ID => {'count' = POSITION, 'score' => SCORE}
+   if (exists $data->{Link}) {
+       my $ct = 0;
+       for my $link (@{$data->{Link}}) {
+           if (exists $link->{Score}) {
+               $self->{'_has_scores'}++;
+               $self->{'_id'}->{$link->{Id}->[0]} = [ $ct++,$link->{Score}];
+           } else {
+               $self->{'_id'}->{$link->{Id}->[0]} = [ $ct++ ];
+           }
+       }
+   }
+   elsif (exists $data->{Id}) { # urls
+       %{$self->{'_id'} } = ($data->{Id}->[0] => [1]);
+   }
 }
 
 sub _add_objurls {
     my ($self, $data) = @_;
-    for my $urldata (@{$data->{ObjUrl}}) {
-        $urldata->{dbfrom} = $data->{DbFrom} if exists $data->{DbFrom};
-        my $obj = Bio::Tools::EUtilities::Link::UrlLink->new(-eutil => 'elink',
-                                                             -datatype => 'urldata',
-                                                             -verbose => $self->verbose
-                                                             );
-        $obj->_add_data($urldata);
-        push @{$self->{'_urllinks'}}, $obj;
-    }
+    if ($data->exists('./ObjUrl')) {
+        for my $urldata ($data->findnodes('./ObjUrl')) {
+           # $urldata->{dbfrom} = $data->{DbFrom} if exists $data->{DbFrom};
+           my $obj = Bio::Tools::EUtilities::Link::UrlLink->new(-eutil => 'elink',
+                                                                -datatype => 'urldata',
+                                                                -verbose => $self->verbose
+                                                                );
+           $obj->_add_data($urldata);
+           push @{$self->{'_urllinks'}}, $obj;
+       }
+   }
 }
 
 sub _add_linkinfo {
-    my ($self, $data) = @_;
-    for my $linkinfo (@{$data->{LinkInfo}}) {
-        $linkinfo->{dbfrom} = $data->{DbFrom} if exists $data->{DbFrom};
-        my $obj = Bio::Tools::EUtilities::Info::LinkInfo->new(-eutil => 'elink',
-                                                             -datatype => 'linkinfo',
-                                                             -verbose => $self->verbose
-                                                             );
-        $obj->_add_data($linkinfo);
-        push @{$self->{'_linkinfo'}}, $obj;
-    }
+   my ($self, $data) = @_;
+   if ($data->exists('./LinkInfo')) {
+       for my $linkinfo ($data->findnodes('./LinkInfo')) {
+           my $obj = Bio::Tools::EUtilities::Info::LinkInfo->new(-eutil => 'elink',
+                                                                -datatype => 'linkinfo',
+                                                                -verbose => $self->verbose
+                                                                );
+           $obj->_add_data($linkinfo);
+           push @{$self->{'_linkinfo'}}, $obj;
+       }
+   }
 }
 
 =head2 to_string

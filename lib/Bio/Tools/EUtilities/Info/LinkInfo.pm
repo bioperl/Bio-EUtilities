@@ -70,7 +70,7 @@ sub new {
 
 sub get_database {
     my $self = shift;
-    return ($self->{el}->findnodes('./DbTo'))[0]->to_literal();
+    return ($self->_node->findnodes('./DbTo'))[0]->to_literal();
 }
 
 =head2 get_db (alias for get_database)
@@ -102,7 +102,7 @@ sub get_dbto {
 
 sub get_dbfrom {
     my $self = shift;
-    return ($self->{el}->findnodes('//DbInfo/DbName'))[0]->to_literal();
+    return ($self->_node->findnodes('//DbInfo/DbName'))[0]->to_literal();
 }
 
 =head2 get_link_name
@@ -120,7 +120,7 @@ sub get_link_name {
     if ($self->eutil eq 'elink') {
         return $self->{'_linkname'}
     } else {
-        return ($self->{el}->findnodes('./Name'))[0]->to_literal();
+        return ($self->_node->findnodes('./Name'))[0]->to_literal();
     }
 }
 
@@ -136,7 +136,7 @@ sub get_link_name {
 
 sub get_link_description {
     my $self = shift;
-    return ($self->{el}->findnodes('./Description'))[0]->to_literal();
+    return ($self->_node->findnodes('./Description'))[0]->to_literal();
 }
 
 =head2 get_link_menu_name
@@ -154,7 +154,7 @@ sub get_link_menu_name {
     if ($self->eutil eq 'elink') {
         return $self->{'_menutag'};
     } else {
-        return ($self->{el}->findnodes('./MenuName'))[0]->to_literal();
+        return ($self->_node->findnodes('./MenuName'))[0]->to_literal();
     }    
 }
 
@@ -202,7 +202,7 @@ sub get_url { return shift->{'_url'} }
 
 sub _add_data {
     my ($self, $el) = @_;
-    $self->{el} =$el;
+    $self->{_node} =$el;
 }
 
 =head2 to_string

@@ -89,7 +89,7 @@ sub _add_data {
     #    $self->debug("Data:",Dumper($simple));
     #    $self->throw("Missing webenv/query key in history output");
     #}
-    $self->{el} = $dom;
+    $self->_node($dom);
     #$self->{_webenv} = $simple->{WebEnv} && delete $simple->{WebEnv};
     #$self->{_querykey} = $simple->{QueryKey} && delete $simple->{QueryKey};
 }
