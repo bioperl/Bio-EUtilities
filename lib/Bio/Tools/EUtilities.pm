@@ -333,7 +333,7 @@ sub parse_data {
     if (defined $simple->{ERROR} && ! ref($simple->{ERROR})) {
         ## Some errors may not be fatal but there doesn't seem to be a
         ## way for us to know.  So we warn.
-        self->warn("NCBI $eutil error: " . $simple->{ERROR});
+        $self->warn("NCBI $eutil error: " . $simple->{ERROR});
     }
 
 
