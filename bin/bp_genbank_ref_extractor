@@ -381,6 +381,7 @@ GetOptions(
 my $verbosity;
 if ($debug) {
   $verbosity = 9;
+  $Bio::Root::Root::DEBUG = 1;
 } elsif ($very_verbose) {
   $verbosity = 3;
 } elsif ($verbose) {
