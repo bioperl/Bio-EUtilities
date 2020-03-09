@@ -90,11 +90,15 @@ case of heavy usage.
 
 =cut
 my $email = "";
-=item B <--api_key>
-NCBI requires an API key for requests over 10/sec as of December 2018. You
-may generate one in the "My NCBI" area
+
+=item B <--api-key>
+
+NCBI requires an API key for requests over 10/sec as of December
+2018. You may generate one in the "My NCBI" area.
+
 =cut
 my $api_key = "";
+
 =item B<--format>
 
 Specifies the format that the sequences will be saved. Defaults to I<genbank> format.
@@ -350,7 +354,10 @@ GetOptions(
             'debug'               => \$debug,
             'down|downstream=i'   => \$downstream,
             'email=s'             => \$email,
-            'api_key=s'           => \$api_key,
+            ## The 'api_key' is undocumented and only kept for
+            ## backwards compatibility (it was only during version
+            ## 1.76).
+            'api-key|api_key=s'   => \$api_key,
             'format=s'            => \$format,
             'genes:s'             => \&genes_option_parsing,
             'limit=i'             => \$limit,
