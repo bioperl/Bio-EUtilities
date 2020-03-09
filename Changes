@@ -1,6 +1,8 @@
 Revision history for Bio-EUtilities
 
 {{$NEXT}}
+
+1.77      2020-03-09 13:58:30-05:00 America/Chicago
   * `bp_genbank_ref_extractor` no longer crashes if the '--api-key'
     option is not specified.
   * The option '--api_key' added in 1.76 was renamed to '--api-key'.
