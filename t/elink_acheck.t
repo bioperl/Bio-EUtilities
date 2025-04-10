@@ -7,7 +7,7 @@ use warnings;
 use Test::More tests => 128;
 
 use Bio::Tools::EUtilities;
-use inc::TestHelper qw(test_input_file);
+use Bio::Root::Test;
 
 # check -correspondence => 0 (default) - this is set up to return the
 # exact same thing as correspondece = 1, tested below)

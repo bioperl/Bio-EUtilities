@@ -9,7 +9,7 @@ use Test::More tests => 20;
 
 use Bio::Tools::EUtilities;
 use Bio::Tools::EUtilities::EUtilParameters;
-use inc::TestHelper qw(test_input_file);
+use Bio::Root::Test;
 
 # Normal esearch
 my $eutil = Bio::Tools::EUtilities->new(

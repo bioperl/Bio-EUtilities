@@ -6,7 +6,7 @@ use strict;
 use warnings;
 
 use Test::More tests => 18;
-use inc::TestHelper qw(test_input_file);
+use Bio::Root::Test;
 
 use Bio::Tools::EUtilities;
 

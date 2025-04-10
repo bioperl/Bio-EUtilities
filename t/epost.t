@@ -9,7 +9,7 @@ use Test::More tests => 15;
 use Bio::Tools::EUtilities;
 use Bio::Tools::EUtilities::EUtilParameters;
 
-use inc::TestHelper qw(test_input_file);
+use Bio::Root::Test;
 
 my $eutil = Bio::Tools::EUtilities->new(
     -eutil      => 'epost',

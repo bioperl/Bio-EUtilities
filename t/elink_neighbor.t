@@ -6,7 +6,7 @@ use warnings;
 use Test::More tests => 61;
 
 use Bio::Tools::EUtilities;
-use inc::TestHelper qw(test_input_file);
+use Bio::Root::Test;
 
 # check -correspondence => 0 (default)
 my $eutil = Bio::Tools::EUtilities->new(
